@@ -1,6 +1,8 @@
 
 Seamless.framework is a hack to allow a certain implicit additive view animation usage pattern.
 
+Its effect can be seen by launching the modified CocoaSlides project and resizing the window. To see unaltered Core Animation behavior, merely remove Seamless.framework from CocoaSlides - Build Phases - Link Binary With Libraries. The other two projects, Simple Seamless and JellyBeans show implicit layer animation, and the unaltered behavior can also be seen by removing the framework.
+
 The explicit layer animation technique I use is as follows: In a transaction with actions disabled, set the new model value of the property. Then create an additive CABasicAnimation with a .5,0,.5,1 timing function and kCAFillModeBoth. The fromValue is the old model value minus the new model value. The toValue is zero, NSZeroPoint, NSZeroSize, NSZeroRect, or the identity transform. Then add the animation to the layer with a unique or nil key. It is intended that there be many animations of the same keyPath running concurrently. The result is beautiful curves that respond well to user interaction.
 
 
