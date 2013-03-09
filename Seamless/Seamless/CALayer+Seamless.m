@@ -33,7 +33,6 @@ static NSUInteger seamlessAnimationCount = 0;
 -(CALayer*)previousLayer { // It would be bad to add this as a sublayer in a layer tree, and nothing prevents you from doing so... except maybe initWithLayer. That's why this is private now.
 	CALayer *theLayer = objc_getAssociatedObject(self, @"previousLayer");
 	if (theLayer == nil) {
-		//theLayer = [[[self class] alloc] initWithLayer:self]; // Maybe I could just create a new layer every time, but it would still need to be in willChangeValueForKey.
 		theLayer = [CALayer layer]; // You don't want initWithLayer, and you don't want any class other than CALayer.
 		[CATransaction begin];
 		[CATransaction setDisableActions:YES];
