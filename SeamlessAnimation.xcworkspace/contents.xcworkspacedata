@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Seamless/Seamless.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CocoaSlides Seamless/CocoaSlides Seamless.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:JellyBeans Seamless/JellyBeans Seamless.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Simple Seamless/Simple Seamless.xcodeproj">
+   </FileRef>
+</Workspace>
