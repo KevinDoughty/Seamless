@@ -1,11 +1,11 @@
 
-Explicit additive animation is awesome, especially for getting beautiful curves from animations that are triggered by user events like view resize. Core Animation would be even more awesome if implicit animation was possible, because it could greatly simplify the process for animating layer-hosted content. It would also allow additive view animation.
+Seamless.framework is a hack to allow a certain implicit additive view animation usage pattern.
 
-The explicit usage pattern I use is as follows: In a transaction with actions disabled, set the new model value of the property. Then create an additive CABasicAnimation with a .5,0,.5,1 timing function. The fromValue is the old model value minus the new model value. The toValue is zero, NSZeroPoint, NSZeroSize, NSZeroRect, or the identity transform. Then add the animation to the layer with a keyPath of nil. It is intended to have many animations of the same keyPath running concurrently. I have recently noticed that all animations, not just additive, benefit from using a fillMode of kCAFillModeBoth, because of unknown mediaTiming issues that were not present in 10.5 Leopard.
+The explicit layer animation technique I use is as follows: In a transaction with actions disabled, set the new model value of the property. Then create an additive CABasicAnimation with a .5,0,.5,1 timing function and kCAFillModeBoth. The fromValue is the old model value minus the new model value. The toValue is zero, NSZeroPoint, NSZeroSize, NSZeroRect, or the identity transform. Then add the animation to the layer with a unique or nil key. It is intended that there be many animations of the same keyPath running concurrently. The result is beautiful curves that respond well to user interaction.
 
 
 
-Implicit, additive view animation is not possible (at least without the hacks in the Seamless.framework) because of the following small issues:
+Implicit view animation is not possible this way (at least without the hacks in the Seamless.framework) because of the following small issues:
 
 There is no combination of CABasicAnimation interpolation values fromValue, toValue, and byValue that will give you an animation using values from the model layer tree instead of the presentation layer tree.
 
@@ -19,8 +19,8 @@ In addition, the following would make things more convenient:
 
 I have found that sometimes I need to access these keys, but the current API only provides functions like CALayer -animationForKey: and -animationKeys. I am forced to use unique keys and manually track of the animations elsewhere. Perhaps -nilKeyAnimationsForKeyPath: would be useful. Typically I need to access these animations when copying them from one layer to another (fundamental for visual consistency) and for determining the union rect of layers that are scrolling.
 
-It would be convenient to have kCAMediaTimingFunctionPerfect that returned a timing function with the control points .5, 0, .5, 1. This timing function is required, otherwise transitioning between one animation to another becomes visible.
+It would be convenient to have kCAMediaTimingFunctionPerfect that returned a timing function with the control points .5, 0, .5, 1. This timing function is required, otherwise transitioning from when one animation ends to another is visible.
 
-Perhaps the best way to make this possible is a "seamless" property on CAPropertyAnimation or CABasicAnimation. I think Apple should make it the default, because who uses (non-view animation) implicit animation, anyway?
+
 
 P.S. Additive CSS3 animations WTF? Somebody tell the WebKit team. Please? 
