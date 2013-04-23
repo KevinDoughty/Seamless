@@ -182,7 +182,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
 		if (view.isFlipped) { // KD:
 			if (p.x + frame.size.width > NSMaxX(container)) {
 				p.x = NSMinX(container);
-				p.y += rowHeight + Y_PADDING;
+				if (rowHeight > 0) p.y += rowHeight + Y_PADDING;
 				origin.x = p.x;
 				origin.y = p.y;
 				p.x += frame.size.width + X_PADDING;
@@ -196,7 +196,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
 		} else {
 			if (p.x + frame.size.width > NSMaxX(container)) {
 				p.x = NSMinX(container);
-				p.y -= rowHeight + Y_PADDING;
+				if (rowHeight > 0) p.y -= rowHeight + Y_PADDING;
 				origin.x = p.x;
 				origin.y = p.y - frame.size.height;
 				p.x += frame.size.width + X_PADDING;
