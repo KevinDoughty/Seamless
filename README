@@ -1,5 +1,4 @@
-
-Seamless.framework is a hack to allow a certain implicit additive view animation usage pattern.
+Seamless.framework is a hack to allow a certain implicit additive view animation usage pattern. You might not want to actually use this in production, instead complain to Apple that you can’t animate views this way.
 
 Its effect can be seen by launching the modified CocoaSlides project and resizing the window. To see unaltered Core Animation behavior, merely remove Seamless.framework from CocoaSlides - Build Phases - Link Binary With Libraries. The other two projects, Simple Seamless and JellyBeans show implicit layer animation, and the unaltered behavior can also be seen by removing the framework.
 
@@ -25,4 +24,6 @@ It would be convenient to have kCAMediaTimingFunctionPerfect that returned a tim
 
 
 
-P.S. Additive CSS3 animations WTF? Somebody tell the WebKit team. Please? 
+P.S. This is coming soon on the web:
+http://www.w3.org/TR/web-animations/
+https://github.com/web-animations/web-animations-js
