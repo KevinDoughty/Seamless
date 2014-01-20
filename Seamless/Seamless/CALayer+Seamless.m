@@ -39,15 +39,17 @@ static NSUInteger seamlessAnimationCount = 0;
 }
 
 -(CALayer*)seamlessPreviousLayer { // It would be bad to add this as a sublayer in a layer tree, and nothing prevents you from doing so. That's why this is private now.
-	CALayer *theLayer = [self valueForKey:@"seamlessSeamlessPreviousLayer"];
+	//CALayer *theLayer = [self valueForKey:@"seamlessSeamlessPreviousLayer"];
+	CALayer *theLayer = objc_getAssociatedObject(self, @"previousLayer");
 	if (theLayer == nil) {
 		theLayer = [CALayer layer]; // You don't want initWithLayer, and you don't want any class other than CALayer.
 		[CATransaction begin];
 		[CATransaction setDisableActions:YES];
         [theLayer setValue:@YES forKey:@"isSeamlessPreviousLayer"];
-        [self setValue:theLayer forKey:@"seamlessSeamlessPreviousLayer"];
+        //[self setValue:theLayer forKey:@"seamlessSeamlessPreviousLayer"];
 		[CATransaction commit];
-    }
+        objc_setAssociatedObject(self, @"previousLayer",theLayer, OBJC_ASSOCIATION_RETAIN);
+	}
 	return theLayer;
 }
 
@@ -70,11 +72,11 @@ static NSUInteger seamlessAnimationCount = 0;
 -(void)seamlessLayerSwizzleAddAnimation:(CAAnimation*)theAnimation forKey:(NSString*)theKey { // I do this here because in animationForKey: and actionForKey: the fromValue is set to the presentationLayer value, but keyPath, toValue, and byValue are null. Key is known but conversions to keyPath are not, for example frameOrigin to layer.position.
     BOOL theSeamless = ([theAnimation isKindOfClass:[CABasicAnimation class]] && [[(CABasicAnimation*)theAnimation valueForKey:@"seamless"] boolValue]);
     BOOL isSeamlessClass = [theAnimation isKindOfClass:[SeamlessAnimation class]];
-
-    SeamlessTimingBlock theTimingBlock = [CATransaction seamlessTimingBlock];
-    SeamlessTimingBlock theSeamlessBlock = nil;
-    if (isSeamlessClass) theSeamlessBlock = [(SeamlessAnimation*)theAnimation timingBlock];
-    if (theSeamless || isSeamlessClass || theTimingBlock) {
+    
+    SeamlessTimingBlock theTransactionBlock = [CATransaction seamlessTimingBlock];
+    SeamlessTimingBlock theAnimationBlock = nil;
+    if (isSeamlessClass) theAnimationBlock = [(SeamlessAnimation*)theAnimation timingBlock];
+    if (theSeamless || isSeamlessClass || theTransactionBlock) {
         NSString *theKeyPath = nil;
         if (isSeamlessClass) theKeyPath = [(SeamlessAnimation*)theAnimation keyPath];
         else theKeyPath = [(CABasicAnimation*)theAnimation keyPath];
@@ -91,15 +93,15 @@ static NSUInteger seamlessAnimationCount = 0;
             theKeyframeAnimation.fillMode = kCAFillModeBackwards; // In case mediaTiming is off by a small amount. It can happen post 10.5 Leopard
             theKeyframeAnimation.additive = YES;
             NSUInteger steps = [CATransaction seamlessSteps];
-            if (!theTimingBlock) steps = 2;
+            if (!theTransactionBlock && !theAnimationBlock) steps = 2;
             else if (steps < 2) steps = kSeamlessSteps;
             
             NSArray *(^keyframeValues)(NSValue *(^theValueBlock)(double)) = ^(NSValue *(^theValueBlock)(double)) { // A block that takes a block as an argument.
                 NSMutableArray *theValues = @[].mutableCopy;
                 for (NSUInteger i=0; i<steps; i++) {
                     double offset = (1.0/(steps-1))*i;
-                    if (theSeamlessBlock) offset = theSeamlessBlock(offset);
-                    if (theTimingBlock) offset = theTimingBlock(offset); // should I enforce 0 and 1 for first and last?
+                    if (theAnimationBlock) offset = theAnimationBlock(offset);
+                    if (theTransactionBlock) offset = theTransactionBlock(offset); // should I enforce 0 and 1 for first and last?
                     double progress = 1.0 - offset; // This is a private implementation detail. Convert from 0 - 1 to 1 - 0. Timing block is in expected order.
                     NSValue *theFrame = theValueBlock(progress);
                     [theValues addObject:theFrame];
@@ -111,7 +113,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 CATransform3D o = [theOldValue CATransform3DValue];
                 CATransform3D n = [theNewValue CATransform3DValue];
                 CATransform3D d = CATransform3DConcat(o,CATransform3DInvert(n));
-
+                
                 if (!CATransform3DIsIdentity(d)) {
                     theKeyframeAnimation.values = keyframeValues(^(double progress) {
                         CATransform3D t = [self seamlessBlendTransform:d to:CATransform3DIdentity progress:1-progress]; // 1-progress because passed argument is from 1 to 0. This is a private implementation detail, other types are easy to interpolate so progress is converted to 1 - 0 which is multiplied by the negative delta.
@@ -184,17 +186,17 @@ static NSUInteger seamlessAnimationCount = 0;
                     }
                     if (theOriginAnimation != nil && theSizeAnimation != nil) {
                         CAAnimationGroup *theGroupAnimation = [CAAnimationGroup animation];
-                        if (!theTimingBlock) theGroupAnimation.timingFunction = perfectTimingFunction;
+                        if (!theTransactionBlock) theGroupAnimation.timingFunction = perfectTimingFunction;
                         theGroupAnimation.fillMode = kCAFillModeBoth;
                         theGroupAnimation.animations = [NSArray arrayWithObjects:theOriginAnimation, theSizeAnimation, nil];
                         [self seamlessLayerSwizzleAddAnimation:theGroupAnimation forKey:[CALayer seamlessAnimationKey]];
                         return;
                     } else if (theSizeAnimation != nil) {
-                        if (!theTimingBlock) theSizeAnimation.timingFunction = perfectTimingFunction;
+                        if (!theTransactionBlock) theSizeAnimation.timingFunction = perfectTimingFunction;
                         [self seamlessLayerSwizzleAddAnimation:theSizeAnimation forKey:[CALayer seamlessAnimationKey]];
                         return;
                     } else if (theOriginAnimation != nil) {
-                        if (!theTimingBlock) theOriginAnimation.timingFunction = perfectTimingFunction;
+                        if (!theTransactionBlock) theOriginAnimation.timingFunction = perfectTimingFunction;
                         [self seamlessLayerSwizzleAddAnimation:theOriginAnimation forKey:[CALayer seamlessAnimationKey]];
                         return;
                     }
@@ -218,7 +220,7 @@ static NSUInteger seamlessAnimationCount = 0;
 #else
                             return [NSValue valueWithRect:NSMakeRect(progress * deltaX, progress * deltaY, progress * deltaW, progress * deltaH)];
 #endif
-                    
+                            
                         });
                         [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
                         return;
@@ -259,9 +261,9 @@ static NSUInteger seamlessAnimationCount = 0;
                     return;
                 }
             } else if (strcmp(objCType,@encode(double))==0) {
-                CGFloat oldDouble = [theOldValue doubleValue];
-                CGFloat newDouble = [theNewValue doubleValue];
-                CGFloat deltaDouble = oldDouble-newDouble;
+                double oldDouble = [theOldValue doubleValue];
+                double newDouble = [theNewValue doubleValue];
+                double deltaDouble = oldDouble-newDouble;
                 if (deltaDouble) {
                     theKeyframeAnimation.values = keyframeValues(^(double progress) {
                         NSNumber *theReturnValue = [NSNumber numberWithDouble:progress * deltaDouble];
@@ -270,13 +272,9 @@ static NSUInteger seamlessAnimationCount = 0;
                     [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
                     return;
                 }
-            } else {
-                //NSLog(@"unknown objCType:%@;",[[NSString alloc] initWithCString:objCType encoding:NSASCIIStringEncoding]);
-            }
-            
+            } // else NSLog(@"unknown objCType:%@;",[[NSString alloc] initWithCString:objCType encoding:NSASCIIStringEncoding]);
         }
     }
-    
     [self seamlessLayerSwizzleAddAnimation:theAnimation forKey:theKey];
 }
 
@@ -284,7 +282,5 @@ static NSUInteger seamlessAnimationCount = 0;
     CATransform3D final = seamlessBlend(fromTransform,toTransform,progress);
     return final;
 }
-
-
 
 @end

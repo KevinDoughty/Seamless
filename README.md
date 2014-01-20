@@ -32,7 +32,7 @@ This gives a nice elastic wobble and is based on math from Matt Gallager's excel
 ```objc
 [CATransaction setAnimationDuration:3.0];
 [CATransaction setSeamlessTimingBlock:^ (double progress) {
-	dobule omega = 20.0;
+	double omega = 20.0;
 	double zeta = 0.5;
 	double beta = sqrt(1.0 - zeta * zeta);
 	return 1 - 1 / beta * expf(-zeta * omega * progress) * sinf(beta * omega * progress + atanf(beta / zeta));
