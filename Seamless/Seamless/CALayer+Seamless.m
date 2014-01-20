@@ -116,7 +116,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 CATransform3D d = CATransform3DConcat(o,CATransform3DInvert(n));
 
                 if (!CATransform3DIsIdentity(d)) {
-                    theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
                         CATransform3D t = [self seamlessBlendTransform:d to:CATransform3DIdentity progress:1-progress]; // 1-progress because passed argument is from 1 to 0. This is a private implementation detail, other types are easy to interpolate so progress is converted to 1 - 0 which is multiplied by the negative delta.
                         return [NSValue valueWithCATransform3D:t];
                     });
@@ -134,7 +134,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 newPoint = [theNewValue pointValue];
 #endif
                 if (oldPoint.x-newPoint.x || oldPoint.y-newPoint.y) {
-                    theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
 #if TARGET_OS_IPHONE
                         return [NSValue valueWithCGPoint:CGPointMake(progress * (oldPoint.x-newPoint.x), progress * (oldPoint.y-newPoint.y))];
 #else
@@ -161,7 +161,7 @@ static NSUInteger seamlessAnimationCount = 0;
                     CGFloat deltaY = oldRect.origin.y-newRect.origin.y;
                     if (deltaX || deltaY) {
                         theOriginAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".origin"]];
-                        theOriginAnimation.values = keyframeValues(^(CGFloat progress) {
+                        theOriginAnimation.values = keyframeValues(^(double progress) {
 #if TARGET_OS_IPHONE
                             return [NSValue valueWithCGPoint:CGPointMake(progress * deltaX, progress * deltaY)];
 #else
@@ -175,7 +175,7 @@ static NSUInteger seamlessAnimationCount = 0;
                     CGFloat deltaH = oldRect.size.height-newRect.size.height;
                     if (deltaW || deltaH) {
                         theSizeAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".size"]];
-                        theSizeAnimation.values = keyframeValues(^(CGFloat progress) {
+                        theSizeAnimation.values = keyframeValues(^(double progress) {
 #if TARGET_OS_IPHONE
                             return [NSValue valueWithCGSize:CGSizeMake(progress * deltaW, progress * deltaH)];
 #else
@@ -215,7 +215,7 @@ static NSUInteger seamlessAnimationCount = 0;
                     CGFloat deltaW = oldRect.size.width-oldRect.size.height;
                     CGFloat deltaH = oldRect.size.height-newRect.size.height;
                     if (deltaX || deltaY || deltaW || deltaH) {
-                        theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
 #if TARGET_OS_IPHONE
                             return [NSValue valueWithCGRect:CGRectMake(progress * deltaX, progress * deltaY, progress * deltaW, progress * deltaH)];
 #else
@@ -239,7 +239,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 CGFloat deltaW = oldSize.width-newSize.width;
                 CGFloat deltaH = oldSize.height-newSize.height;
                 if (deltaW || deltaH) {
-                    theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
 #if TARGET_OS_IPHONE
                         return [NSValue valueWithCGSize:CGSizeMake(progress * deltaW, progress * deltaH)];
 #else
@@ -254,7 +254,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 CGFloat newFloat = [theNewValue floatValue];
                 CGFloat deltaFloat = oldFloat-newFloat;
                 if (deltaFloat) {
-                    theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
                         NSNumber *theReturnValue = [NSNumber numberWithFloat:progress * deltaFloat];
                         return theReturnValue;
                     });
@@ -266,7 +266,7 @@ static NSUInteger seamlessAnimationCount = 0;
                 CGFloat newDouble = [theNewValue doubleValue];
                 CGFloat deltaDouble = oldDouble-newDouble;
                 if (deltaDouble) {
-                    theKeyframeAnimation.values = keyframeValues(^(CGFloat progress) {
+                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
                         NSNumber *theReturnValue = [NSNumber numberWithDouble:progress * deltaDouble];
                         return theReturnValue;
                     });
