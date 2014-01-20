@@ -8,6 +8,7 @@
 
 #import "JellyBeanView.h"
 #import <QuartzCore/QuartzCore.h>
+#import <Seamless/Seamless.h>
 
 @interface JellyBeanView ()
 @property (retain) NSEnumerator *layerEnumerator;
@@ -152,6 +153,14 @@
     else {
         self.layerIndex = [self.layer.sublayers indexOfObject:theLayer];
         [CATransaction setAnimationDuration:self.animationDuration];
+        [CATransaction setSeamlessTimingBlock:^ (double progress) {
+            double omega = 20.0;
+            double zeta = 0.75;
+            progress = 1 - cosf( progress * M_PI / 2 );
+            double beta = sqrt(1.0 - zeta * zeta);
+            progress = 1.0 / beta * expf(-zeta * omega * progress) * sinf(beta * omega * progress + atanf(beta / zeta));
+            return 1-progress;
+        }];
         theLayer.position = [self gridPointForLayer:theLayer];
         theLayer.bounds = CGRectMake(0,0,self.itemDimension,self.itemDimension);
         theLayer.cornerRadius = self.itemDimension/2.0;

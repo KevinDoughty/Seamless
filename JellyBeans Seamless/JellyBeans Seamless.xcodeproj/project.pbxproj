@@ -14,8 +14,8 @@
 		0A50F20716EAEFC1000CED82 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50F20616EAEFC1000CED82 /* AppDelegate.m */; };
 		0A50F20A16EAEFC1000CED82 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A50F20816EAEFC1000CED82 /* MainMenu.xib */; };
 		0A50F21216EAF00D000CED82 /* JellyBeanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50F21116EAF00D000CED82 /* JellyBeanView.m */; };
-		0A50F21416EAF281000CED82 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A50F21316EAF281000CED82 /* QuartzCore.framework */; };
-		0A50F21616EAF371000CED82 /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A50F21516EAF371000CED82 /* Seamless.framework */; };
+		0A767EEF188C6EEA00631871 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A767EEE188C6EEA00631871 /* QuartzCore.framework */; };
+		0A767EF1188C6F2F00631871 /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A767EF0188C6F2F00631871 /* Seamless.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,8 +34,8 @@
 		0A50F20916EAEFC1000CED82 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		0A50F21016EAF00D000CED82 /* JellyBeanView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JellyBeanView.h; sourceTree = "<group>"; };
 		0A50F21116EAF00D000CED82 /* JellyBeanView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JellyBeanView.m; sourceTree = "<group>"; };
-		0A50F21316EAF281000CED82 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
-		0A50F21516EAF371000CED82 /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = "../../../../Library/Developer/Xcode/DerivedData/SeamlessAnimation-cpsiotsdzcxdskbueaixkbjmtlak/Build/Products/Debug/Seamless.framework"; sourceTree = "<group>"; };
+		0A767EEE188C6EEA00631871 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
+		0A767EF0188C6F2F00631871 /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = "/Volumes/貯蔵/Documents/xcode/github/Seamless/Simple Seamless/../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug/Seamless.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,8 +44,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A50F1F416EAEFC1000CED82 /* Cocoa.framework in Frameworks */,
-				0A50F21416EAF281000CED82 /* QuartzCore.framework in Frameworks */,
-				0A50F21616EAF371000CED82 /* Seamless.framework in Frameworks */,
+				0A767EF1188C6F2F00631871 /* Seamless.framework in Frameworks */,
+				0A767EEF188C6EEA00631871 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +55,6 @@
 		0A50F1E716EAEFC1000CED82 = {
 			isa = PBXGroup;
 			children = (
-				0A50F21516EAF371000CED82 /* Seamless.framework */,
 				0A50F1F916EAEFC1000CED82 /* JellyBeans Seamless */,
 				0A50F1F216EAEFC1000CED82 /* Frameworks */,
 				0A50F1F116EAEFC1000CED82 /* Products */,
@@ -73,7 +72,8 @@
 		0A50F1F216EAEFC1000CED82 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A50F21316EAF281000CED82 /* QuartzCore.framework */,
+				0A767EF0188C6F2F00631871 /* Seamless.framework */,
+				0A767EEE188C6EEA00631871 /* QuartzCore.framework */,
 				0A50F1F316EAEFC1000CED82 /* Cocoa.framework */,
 				0A50F1F516EAEFC1000CED82 /* Other Frameworks */,
 			);
@@ -280,7 +280,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/SeamlessAnimation-cpsiotsdzcxdskbueaixkbjmtlak/Build/Products/Debug\"",
+					"/Volumes/貯蔵/Documents/xcode/github/Seamless/Simple\\ Seamless/../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "JellyBeans Seamless/JellyBeans Seamless-Prefix.pch";
@@ -296,7 +296,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/SeamlessAnimation-cpsiotsdzcxdskbueaixkbjmtlak/Build/Products/Debug\"",
+					"/Volumes/貯蔵/Documents/xcode/github/Seamless/Simple\\ Seamless/../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "JellyBeans Seamless/JellyBeans Seamless-Prefix.pch";
@@ -325,6 +325,7 @@
 				0A50F20F16EAEFC1000CED82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

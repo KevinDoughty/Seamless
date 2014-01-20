@@ -105,7 +105,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
 - (unsigned long long)fileSize {
     if (fileSize == 0) {
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSDictionary *attributes = [fileManager fileAttributesAtPath:[[self url] path] traverseLink:YES];
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:[[self url] path] error:nil];
         fileSize = [[attributes objectForKey:NSFileSize] unsignedLongLongValue];
     }
     return fileSize;

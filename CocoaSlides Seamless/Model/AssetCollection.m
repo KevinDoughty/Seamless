@@ -134,7 +134,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
         asset = [self assetForFilename:filename];
         if (asset != nil) {
             // Check whether file has changed.
-            NSDictionary *fileAttributes = [fileManager fileAttributesAtPath:path traverseLink:YES];
+            NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:path error:nil];
             if (fileAttributes != nil) {
                 // Get file's modification date.
                 NSDate *fileModificationDate = [fileAttributes objectForKey:NSFileModificationDate];
@@ -222,7 +222,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
 - (NSArray *)findAssetFilesInRootURL {
     NSString *rootPath = [[self rootURL] path];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *possibleAssetFiles = [fileManager directoryContentsAtPath:rootPath];
+    NSArray *possibleAssetFiles = [fileManager contentsOfDirectoryAtPath:rootPath error:nil];
     NSArray *supportedAssetFileTypes = [ImageAsset fileTypes];
     NSMutableArray *assetFiles = [NSMutableArray array];
 

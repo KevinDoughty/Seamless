@@ -1,29 +1,86 @@
-Seamless.framework is a hack to allow a certain implicit additive view animation usage pattern. You might not want to actually use this in production, instead complain to Apple that you can’t animate views this way.
+# Seamless
 
-Its effect can be seen by launching the modified CocoaSlides project and resizing the window. To see unaltered Core Animation behavior, merely remove Seamless.framework from CocoaSlides - Build Phases - Link Binary With Libraries. The other two projects, Simple Seamless and JellyBeans show implicit layer animation, and the unaltered behavior can also be seen by removing the framework.
-
-The explicit layer animation technique I use is as follows: In a transaction with actions disabled, set the new model value of the property. Then create an additive CABasicAnimation with a .5,0,.5,1 timing function and kCAFillModeBoth. The fromValue is the old model value minus the new model value. The toValue is zero, NSZeroPoint, NSZeroSize, NSZeroRect, or the identity transform. Then add the animation to the layer with a unique or nil key. It is intended that there be many animations of the same keyPath running concurrently. The result is beautiful curves that respond well to user interaction.
-
-
-
-Implicit view animation is not possible this way (at least without the hacks in the Seamless.framework) because of the following small issues:
-
-There is no combination of CABasicAnimation interpolation values fromValue, toValue, and byValue that will give you an animation using values from the model layer tree instead of the presentation layer tree.
-
-Keys must be nil or unique so many animations can run on the same CALayer property. Implicit animation only adds animations with a key that is the same as the property being animated. 
-
-The actionForKey: pattern doesn't allow one to easily know what the previous value is. In my implementation I added CALayer -previousLayer, which is similar in concept to -presentationLayer. 
+`Seamless.framework` for OSX and `libSeamless.a` for iOS enhance Core Animation with additive negative delta animation.
+It adds simple animation smoothing or custom timing determined by blocks, 
+to instances of `CABasicAnimation` with an extension to `CATransaction`,
+or on instances of a `CAPropertyAnimation` subclass called `SeamlessAnimation`.
+It is meant to be used where implicit animation is appropriate,
+and is especially useful for the `NSAnimatablePropertyContainer` Protocol (`NSView` animation) which requires implicit animation.
+Animations are declared with absolute values, 
+but run relative to the underlying model value by animating from the old model value minus the new model value, 
+to a destination value of zero.
+This is the best technique for responding to rapid user events.
 
 
+## CATransaction
 
-In addition, the following would make things more convenient:
+### `+(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;`
 
-I have found that sometimes I need to access these keys, but the current API only provides functions like CALayer -animationForKey: and -animationKeys. I am forced to use unique keys and manually track of the animations elsewhere. Perhaps -nilKeyAnimationsForKeyPath: would be useful. Typically I need to access these animations when copying them from one layer to another (fundamental for visual consistency) and for determining the union rect of layers that are scrolling.
+Set the block used for timing of animations in current transaction. 
+Sole argument is a `double` between 0 and 1.
+Return value is a `double` that can also be below 0 and above 1.
 
-It would be convenient to have kCAMediaTimingFunctionPerfect that returned a timing function with the control points .5, 0, .5, 1. This timing function is required, otherwise transitioning from when one animation ends to another is visible.
+#### Discussion
+
+Timing is emulated by replacing animations with instances of CAKeyframeAnimation behind the scenes.
+Animated values must be one of transform, rect, size, point, float, or double.
+
+#### Example
+
+This gives a nice elastic wobble and is based on math from Matt Gallager's excellent Animation Acceleration project:
+(http://www.cocoawithlove.com/2008/09/parametric-acceleration-curves-in-core.html)
+
+```objc
+[CATransaction setAnimationDuration:3.0];
+[CATransaction setSeamlessTimingBlock:^ (CGFloat progress) {
+	CGFloat omega = 20.0;
+	CGFloat zeta = 0.5;
+	CGFloat beta = sqrt(1.0 - zeta * zeta);
+	return 1 - 1 / beta * expf(-zeta * omega * progress) * sinf(beta * omega * progress + atanf(beta / zeta));
+}];
+theFirstLayer.position = CGPointMake(100,100);
+theSecondLayer.transform = CATransform3DMakeRotation(M_PI_2, 0, 0, 1);
+```
 
 
+## SeamlessAnimation
 
-P.S. This is coming soon on the web:
-http://www.w3.org/TR/web-animations/
-https://github.com/web-animations/web-animations-js
+Inherits from `CAPropertyAnimation`
+
+### `@property (copy) id oldValue;`
+
+Optional. The layer's previous model value or what it is supposed to appear to be. 
+You define the value absolutely but behind the scenes it is converted to a relative old minus new.
+
+### `@property (copy) id nuValue;`
+
+Optional. The layer's current ("new") model value or what it is supposed to appear to be.
+Behind the scenes, the actual animation destination is zero.
+
+### `@property (copy) SeamlessTimingBlock timingBlock;`
+
+Optional. A block that specifies the timing of the animation. 
+Sole argument is a `double` between 0 and 1.
+Return value is a `double` that can also be below 0 and above 1.
+
+#### Discussion
+
+If there is a timing block for the current transaction, it operates on what this returns.
+If not set, simple smoothing is achieved by using a "perfect" `[CAMediaTimingFunction functionWithControlPoints:0.5 :0.0 :0.5 :1.0f];`
+
+
+## `SeamlessTimingBlock`
+
+`typedef double(^SeamlessTimingBlock)(double);`
+
+## License
+
+Released under the [BSD License](http://www.opensource.org/licenses/bsd-license).
+
+## TODO:
+
+Resolve what happens if simple smoothing `SeamlessAnimation` is contained in a `CATransaction` with a timing block, 
+or a `SeamlessAnimation` with a timing block is contained in a `CATransaction` with simple smoothing.
+Currently can not combine simple smoothing with timing blocks.
+
+Need iOS examples.

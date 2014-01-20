@@ -28,7 +28,7 @@
 		05F0DFEF0A632727004CE6A7 /* BrowserWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DFEC0A632727004CE6A7 /* BrowserWindowController.m */; };
 		05F0DFF00A632727004CE6A7 /* MainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F0DFEE0A632727004CE6A7 /* MainController.m */; };
 		05F0E0410A63286C004CE6A7 /* BrowserWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 05F0E03F0A63286C004CE6A7 /* BrowserWindow.nib */; };
-		0A31D4D715E095AB00EE6A97 /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A31D4D615E095AB00EE6A97 /* Seamless.framework */; };
+		0A39A0E2187CB6C400EA5366 /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A39A0E1187CB6C400EA5366 /* Seamless.framework */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
@@ -74,8 +74,7 @@
 		05F0DFEE0A632727004CE6A7 /* MainController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MainController.m; sourceTree = "<group>"; };
 		05F0E0400A63286C004CE6A7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/BrowserWindow.nib; sourceTree = "<group>"; };
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		0A31D4D615E095AB00EE6A97 /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = ../../../../../../Users/k/Library/Frameworks/Seamless.framework; sourceTree = "<group>"; };
-		0A50F17516EAE286000CED82 /* Seamless.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Seamless.framework; path = "/Users/k/Library/Developer/Xcode/DerivedData/SeamlessAnimation-cpsiotsdzcxdskbueaixkbjmtlak/Build/Products/Debug/Seamless.framework"; sourceTree = "<absolute>"; };
+		0A39A0E1187CB6C400EA5366 /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = "../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug/Seamless.framework"; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -95,7 +94,7 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				05F0DE880A632614004CE6A7 /* QuartzCore.framework in Frameworks */,
 				05E0E6E10A8A4B0700C10370 /* Quartz.framework in Frameworks */,
-				0A31D4D715E095AB00EE6A97 /* Seamless.framework in Frameworks */,
+				0A39A0E2187CB6C400EA5366 /* Seamless.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,7 +188,6 @@
 		2A37F4AAFDCFA73011CA2CEA /* xGallery */ = {
 			isa = PBXGroup;
 			children = (
-				0A50F17516EAE286000CED82 /* Seamless.framework */,
 				0566A17A0A8C153E000E5169 /* ReadMe.rtf */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
@@ -240,7 +238,7 @@
 		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A31D4D615E095AB00EE6A97 /* Seamless.framework */,
+				0A39A0E1187CB6C400EA5366 /* Seamless.framework */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
@@ -274,7 +272,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "CocoaSlides Seamless" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -382,7 +380,6 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -392,6 +389,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					/Users/k/Library/Frameworks,
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
@@ -409,7 +407,6 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
 				DSTROOT = "/tmp/$(PROJECT_NAME).dst";
@@ -420,6 +417,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					/Users/k/Library/Frameworks,
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
@@ -437,16 +435,13 @@
 			buildSettings = {
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 			};

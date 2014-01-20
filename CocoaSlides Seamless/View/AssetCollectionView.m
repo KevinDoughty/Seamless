@@ -54,6 +54,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
 #import "SlideCarrierView.h"
 #import "ViewLayout.h"
 #import <Quartz/Quartz.h>
+#import <Seamless/Seamless.h>
 
 // This is the document view class for Browser windows.
 
@@ -152,7 +153,14 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
         // Push an NSAnimationContext on the animation context stack, and set its duration to the desired amount of time (expressed in seconds).  All animations initiated within this grouping will be given the same implied start time and duration.
         [NSAnimationContext beginGrouping];
         [[NSAnimationContext currentContext] setDuration:[self layoutDuration]];
-
+        [[NSAnimationContext currentContext] setSeamlessTimingBlock:^ (double progress) {
+            double omega = 20.0;
+            double zeta = 0.75;
+            progress = 1 - cosf( progress * M_PI / 2 );
+			double beta = sqrt(1.0 - zeta * zeta);
+			progress = 1.0 / beta * expf(-zeta * omega * progress) * sinf(beta * omega * progress + atanf(beta / zeta));
+			return 1-progress;
+        }];
         // Note the power of "animator" proxy objects at work here!  The various ViewLayout classes were written to expect a view and an array of subviews (sorted in the desired order) as parameters.  By simply passing the animators of the subviews to be laid out in place of the subviews themselves, we can use our existing static layout code to initiate animations.  The -layoutSubviews:ofView: method that we invoke below ends up talking to view animators instead of the views themselves, without even knowing it.
         [layout layoutSubviews:[self animatorsForArrangedSubviews] ofView:self];
 
