@@ -16,27 +16,22 @@
 @implementation CATransaction (Seamless)
 
 +(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock {
-	//objc_setAssociatedObject(self, &kSeamlessTimingBlockKey, theBlock, OBJC_ASSOCIATION_COPY);
-    [self setValue:[theBlock copy] forKey:@"seamlessSeamlessTimingBlock"];
+	[self setValue:[theBlock copy] forKey:@"seamlessSeamlessTimingBlock"];
 }
 +(SeamlessTimingBlock)seamlessTimingBlock {
-    //return objc_getAssociatedObject(self, &kSeamlessTimingBlockKey);
     return [self valueForKey:@"seamlessSeamlessTimingBlock"];
 }
 +(void)setSeamlessSteps:(NSUInteger)theSteps {
-	//objc_setAssociatedObject(self, &kSeamlessTimingBlockKey, theBlock, OBJC_ASSOCIATION_COPY);
-    [self setValue:@(theSteps) forKey:@"seamlessSeamlessSteps"];
+	[self setValue:@(theSteps) forKey:@"seamlessSeamlessSteps"];
 }
 +(NSUInteger)seamlessSteps {
-    //return objc_getAssociatedObject(self, &kSeamlessTimingBlockKey);
     return [[self valueForKey:@"seamlessSeamlessSteps"] unsignedIntegerValue];
 }
 +(void)setSeamless:(BOOL)theSeamless {
-	//objc_setAssociatedObject(self, &kSeamlessTimingBlockKey, theBlock, OBJC_ASSOCIATION_COPY);
-    [self setValue:@(theSeamless) forKey:@"seamlessSeamless"];
+	[self setValue:@(theSeamless) forKey:@"seamlessSeamless"];
 }
 +(BOOL)seamless {
-    //return objc_getAssociatedObject(self, &kSeamlessTimingBlockKey);
     return [[self valueForKey:@"seamlessSeamless"] boolValue];
 }
+
 @end

@@ -16,6 +16,7 @@
 typedef double(^SeamlessTimingBlock)(double);
 
 @interface CATransaction (Seamless)
+
 +(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;
 +(SeamlessTimingBlock)seamlessTimingBlock;
 +(void)setSeamlessSteps:(NSUInteger)theSteps;

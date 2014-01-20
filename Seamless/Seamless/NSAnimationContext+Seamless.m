@@ -17,6 +17,7 @@
 #import "CATransaction+Seamless.h"
 
 @implementation NSAnimationContext (Seamless)
+
 -(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock {
 	[CATransaction setSeamlessTimingBlock:theBlock];
 }
@@ -35,6 +36,7 @@
 +(BOOL)seamless {
     return [CATransaction seamless];
 }
+
 @end
 
 #endif

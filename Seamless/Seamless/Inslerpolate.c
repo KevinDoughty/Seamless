@@ -84,7 +84,7 @@ static CATransform3D seamlessMakeTransform(SeamlessMatrix4 m_matrix) {
     return t;
 }
 
-static void seamlessAssignMatrix(SeamlessMatrix4 m_matrix, SeamlessMatrix4 m) { // called from seamlessRecompose
+static void seamlessAssignMatrix(SeamlessMatrix4 m_matrix, SeamlessMatrix4 m) {
     m_matrix[0][0] = m[0][0]; m_matrix[0][1] = m[0][1]; m_matrix[0][2] = m[0][2]; m_matrix[0][3] = m[0][3];
     m_matrix[1][0] = m[1][0]; m_matrix[1][1] = m[1][1]; m_matrix[1][2] = m[1][2]; m_matrix[1][3] = m[1][3];
     m_matrix[2][0] = m[2][0]; m_matrix[2][1] = m[2][1]; m_matrix[2][2] = m[2][2]; m_matrix[2][3] = m[2][3];
@@ -309,7 +309,7 @@ static double seamlessDeterminant3x3(double a1, double a2, double a3, double b1,
     - b1 * seamlessDeterminant2x2(a2, a3, c2, c3)
     + c1 * seamlessDeterminant2x2(a2, a3, b2, b3);
 }
-static inline double seamlessDeterminant4x4(const SeamlessMatrix4 m){
+static inline double seamlessDeterminant4x4(const SeamlessMatrix4 m) {
     // Assign to individual variable names to aid selecting
     // correct elements
     
@@ -340,8 +340,7 @@ static inline double seamlessDeterminant4x4(const SeamlessMatrix4 m){
 }
 
 
-static void seamlessAdjoint(SeamlessMatrix4 *matrix, SeamlessMatrix4 *result)
-{
+static void seamlessAdjoint(SeamlessMatrix4 *matrix, SeamlessMatrix4 *result) {
     // Assign to individual variable names to aid
     // selecting correct values
     double a1 = *matrix[0][0];
@@ -386,8 +385,7 @@ static void seamlessAdjoint(SeamlessMatrix4 *matrix, SeamlessMatrix4 *result)
     *result[3][3]  =   seamlessDeterminant3x3(a1, a2, a3, b1, b2, b3, c1, c2, c3);
 }
 
-static bool seamlessInverse(SeamlessMatrix4 *matrix, SeamlessMatrix4 *result)
-{
+static bool seamlessInverse(SeamlessMatrix4 *matrix, SeamlessMatrix4 *result) {
     // Calculate the adjoint matrix
     seamlessAdjoint(matrix, result);
     
@@ -421,8 +419,7 @@ static void seamlessTransposeMatrix4(SeamlessMatrix4* a, SeamlessMatrix4* b) {
 }
 
 // Multiply a homogeneous point by a matrix and return the transformed point
-static void seamlessV4MulPointByMatrix(const SeamlessVector4 p, const SeamlessMatrix4 *m, SeamlessVector4 result)
-{
+static void seamlessV4MulPointByMatrix(const SeamlessVector4 p, const SeamlessMatrix4 *m, SeamlessVector4 result) {
     result[0] = (p[0] * *m[0][0]) + (p[1] * *m[1][0]) +
     (p[2] * *m[2][0]) + (p[3] * *m[3][0]);
     result[1] = (p[0] * *m[0][1]) + (p[1] * *m[1][1]) +
@@ -434,13 +431,11 @@ static void seamlessV4MulPointByMatrix(const SeamlessVector4 p, const SeamlessMa
 }
 
 
-static double seamlessV3Length(SeamlessVector3 a)
-{
+static double seamlessV3Length(SeamlessVector3 a) {
     return sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2]));
 }
 
-static void seamlessV3Scale(SeamlessVector3 v, double desiredLength)
-{
+static void seamlessV3Scale(SeamlessVector3 v, double desiredLength) {
     double len = seamlessV3Length(v);
     if (len != 0) {
         double l = desiredLength / len;
@@ -450,23 +445,20 @@ static void seamlessV3Scale(SeamlessVector3 v, double desiredLength)
     }
 }
 
-static double seamlessV3Dot(const SeamlessVector3 a, const SeamlessVector3 b)
-{
+static double seamlessV3Dot(const SeamlessVector3 a, const SeamlessVector3 b) {
     return (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
 }
 
 // Make a linear combination of two vectors and return the result.
 // result = (a * ascl) + (b * bscl)
-static void seamlessV3Combine(const SeamlessVector3 a, const SeamlessVector3 b, SeamlessVector3 result, double ascl, double bscl)
-{
+static void seamlessV3Combine(const SeamlessVector3 a, const SeamlessVector3 b, SeamlessVector3 result, double ascl, double bscl) {
     result[0] = (ascl * a[0]) + (bscl * b[0]);
     result[1] = (ascl * a[1]) + (bscl * b[1]);
     result[2] = (ascl * a[2]) + (bscl * b[2]);
 }
 
 // Return the cross product result = a cross b
-static void seamlessV3Cross(const SeamlessVector3 a, const SeamlessVector3 b, SeamlessVector3 result)
-{
+static void seamlessV3Cross(const SeamlessVector3 a, const SeamlessVector3 b, SeamlessVector3 result) {
     result[0] = (a[1] * b[2]) - (a[2] * b[1]);
     result[1] = (a[2] * b[0]) - (a[0] * b[2]);
     result[2] = (a[0] * b[1]) - (a[1] * b[0]);

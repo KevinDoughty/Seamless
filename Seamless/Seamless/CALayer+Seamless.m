@@ -39,7 +39,6 @@ static NSUInteger seamlessAnimationCount = 0;
 }
 
 -(CALayer*)seamlessPreviousLayer { // It would be bad to add this as a sublayer in a layer tree, and nothing prevents you from doing so. That's why this is private now.
-	//CALayer *theLayer = objc_getAssociatedObject(self, @"seamlessPreviousLayer");
 	CALayer *theLayer = [self valueForKey:@"seamlessSeamlessPreviousLayer"];
 	if (theLayer == nil) {
 		theLayer = [CALayer layer]; // You don't want initWithLayer, and you don't want any class other than CALayer.
@@ -48,9 +47,7 @@ static NSUInteger seamlessAnimationCount = 0;
         [theLayer setValue:@YES forKey:@"isSeamlessPreviousLayer"];
         [self setValue:theLayer forKey:@"seamlessSeamlessPreviousLayer"];
 		[CATransaction commit];
-        //objc_setAssociatedObject(self, @"seamlessPreviousLayer",theLayer, OBJC_ASSOCIATION_RETAIN);
-        
-	}
+    }
 	return theLayer;
 }
 

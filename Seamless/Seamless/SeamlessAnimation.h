@@ -15,7 +15,9 @@
 #import "CATransaction+Seamless.h"
 
 @interface SeamlessAnimation : CAPropertyAnimation
+
 @property (copy) id oldValue; // previousValue?
 @property (copy) id nuValue; // currentValue?
 @property (copy) SeamlessTimingBlock timingBlock;
+
 @end
