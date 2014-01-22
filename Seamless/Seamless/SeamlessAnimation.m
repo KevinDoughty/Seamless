@@ -12,7 +12,39 @@
  */
 
 #import "SeamlessAnimation.h"
+#import "CABasicAnimation+Seamless.h"
 
 @implementation SeamlessAnimation
+
++(instancetype)animation {
+    SeamlessAnimation *theAnimation = [super animation];
+    theAnimation.additive = YES;
+    theAnimation.fillMode = kCAFillModeBackwards;
+    theAnimation.seamless = YES;
+    return theAnimation;
+}
++(instancetype)animationWithKeyPath:(NSString*)thePath {
+    SeamlessAnimation *theAnimation = [self animation];
+    theAnimation.keyPath = thePath;
+    return theAnimation;
+}
+-(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock {
+    [super setSeamlessTimingBlock:theBlock];
+}
+-(SeamlessTimingBlock)seamlessTimingBlock {
+    return [super seamlessTimingBlock];
+}
+-(void)setSeamlessSteps:(NSUInteger)theSteps {
+    [super setSeamlessSteps:theSteps];
+}
+-(NSUInteger)seamlessSteps {
+    return [super seamlessSteps];
+}
+-(void)setSeamless:(BOOL)theSeamless {
+    [super setSeamless:theSeamless];
+}
+-(BOOL)seamless {
+    return [super seamless];
+}
 
 @end

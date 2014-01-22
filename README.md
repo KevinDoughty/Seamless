@@ -14,11 +14,27 @@ This is the best technique for responding to rapid user events.
 
 ### CATransaction
 
+#### `+(void)setSeamless:(BOOL)theSeamless`
+
+Uses additive,
+enables negative delta animation, 
+uses previous values instead of presentation,
+uses fillMode of kCAFillModeBackwards,
+affects animation key naming behavior,
+
+#### `+(void)setSeamlessSteps:(NSUInteger))theSteps`
+
+Keyframes are used to emulate a custom timing function.
+Without timing block this has no effect.
+If not set, default is 100.
+
 #### `+(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;`
 
 Set the block used for timing of animations in current transaction. 
 Sole argument is a `double` between 0 and 1.
 Return value is a `double` that can also be below 0 and above 1.
+If not set, animations use a `CAMediaTimingFunction` with control points 0.5, 0.0, 0.5, 1.0 for simple smoothing.
+Additive or negative delta behavior is not implied with this.
 
 ##### Discussion
 
@@ -42,11 +58,32 @@ theSecondLayer.transform = CATransform3DMakeRotation(M_PI_2, 0, 0, 1);
 ```
 
 
+### CABasicAnimation
+
+#### `-(void)setSeamless:(BOOL)theSeamless`
+
+Overrides transaction value, with the same effect.
+
+#### `-(void)setSeamlessSteps:(NSUInteger))theSteps`
+
+Overrides transaction value, with the same effect.
+
+#### `-(void)setSeamlessTimingBlock:(double (^)(double))theBlock;`
+
+Overrides transaction value, with the same effect.
+
+
 ### SeamlessAnimation
 
-Inherits from `CAPropertyAnimation`
+Inherits from `CABasicAnimation`. 
+Default values differ from CABasicAnimation:
+additive = YES, 
+fillMode = kCAFillModeBackwards, 
+seamless = YES,
+fromValue = old minus new, 
+toValue = zero
 
-##### `@property (copy) id oldValue;`
+#### `@property (copy) id oldValue;`
 
 Optional. The layer's previous model value or what it is supposed to appear to be. 
 You define the value absolutely but behind the scenes it is converted to a relative old minus new.
@@ -55,17 +92,6 @@ You define the value absolutely but behind the scenes it is converted to a relat
 
 Optional. The layer's current ("new") model value or what it is supposed to appear to be.
 Behind the scenes, the actual animation destination is zero.
-
-#### `@property (copy) SeamlessTimingBlock timingBlock;`
-
-Optional. A block that specifies the timing of the animation. 
-Sole argument is a `double` between 0 and 1.
-Return value is a `double` that can also be below 0 and above 1.
-
-##### Discussion
-
-If there is a timing block for the current transaction, it operates on what this returns.
-If not set, simple smoothing is achieved by using a "perfect" `[CAMediaTimingFunction functionWithControlPoints:0.5 :0.0 :0.5 :1.0f];`
 
 
 ### `SeamlessTimingBlock`
@@ -79,8 +105,6 @@ Inslerpolate.c is adapted from WebKit source and released under a separate licen
 
 ## TODO:
 
-Resolve what happens if simple smoothing `SeamlessAnimation` is contained in a `CATransaction` with a timing block, 
-or a `SeamlessAnimation` with a timing block is contained in a `CATransaction` with simple smoothing.
-Currently can not combine simple smoothing with timing blocks.
+Documentation unfinished.
 
 Need iOS examples.

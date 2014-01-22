@@ -14,10 +14,21 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CATransaction+Seamless.h"
 
-@interface SeamlessAnimation : CAPropertyAnimation
+//@interface SeamlessAnimation : CAPropertyAnimation // -[SeamlessAnimation _copyRenderAnimationForLayer:]: unrecognized selector sent to instance 0x8a5d9d0
+@interface SeamlessAnimation : CABasicAnimation
+
+//-(double (^)(double))fancyBlock;
+//@property (nonatomic, copy) double (^fancyBlock)(double);
+//-(void)setFancyBlock:(double (^)(double))theBlock;
+
+-(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;
+-(SeamlessTimingBlock)seamlessTimingBlock;
+-(void)setSeamlessSteps:(NSUInteger)theSteps;
+-(NSUInteger)seamlessSteps;
+-(void)setSeamless:(BOOL)theSeamless;
+-(BOOL)seamless;
 
 @property (copy) id oldValue; // previousValue?
 @property (copy) id nuValue; // currentValue?
-@property (copy) SeamlessTimingBlock timingBlock;
 
 @end

@@ -13,7 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface SimpleView : NSView {
-    CALayer *main;
+    CALayer *ball;
 	CAMediaTimingFunction *timingFunction;
 }
 

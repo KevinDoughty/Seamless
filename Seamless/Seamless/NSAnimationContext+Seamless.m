@@ -24,16 +24,16 @@
 -(SeamlessTimingBlock)seamlessTimingBlock {
     return [CATransaction seamlessTimingBlock];
 }
-+(void)setSeamlessSteps:(NSUInteger)theSteps {
+-(void)setSeamlessSteps:(NSUInteger)theSteps {
     [CATransaction setSeamlessSteps:theSteps];
 }
-+(NSUInteger)seamlessSteps {
+-(NSUInteger)seamlessSteps {
     return [CATransaction seamlessSteps];
 }
-+(void)setSeamless:(BOOL)theSeamless {
+-(void)setSeamless:(BOOL)theSeamless {
     [CATransaction setSeamless:theSeamless];
 }
-+(BOOL)seamless {
+-(BOOL)seamless {
     return [CATransaction seamless];
 }
 

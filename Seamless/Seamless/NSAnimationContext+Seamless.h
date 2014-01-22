@@ -20,10 +20,10 @@
 
 -(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;
 -(SeamlessTimingBlock)seamlessTimingBlock;
-+(void)setSeamlessSteps:(NSUInteger)theSteps;
-+(NSUInteger)seamlessSteps;
-+(void)setSeamless:(BOOL)theSeamless;
-+(BOOL)seamless;
+-(void)setSeamlessSteps:(NSUInteger)theSteps;
+-(NSUInteger)seamlessSteps;
+-(void)setSeamless:(BOOL)theSeamless;
+-(BOOL)seamless;
 
 @end
 

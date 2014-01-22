@@ -14,5 +14,6 @@
 #import <Seamless/SeamlessAnimation.h>
 #import <Seamless/CATransaction+Seamless.h>
 #import <Seamless/NSAnimationContext+Seamless.h>
+#import <Seamless/CABasicAnimation+Seamless.h>
 
 void seamlessSwizzle(Class c, SEL orig, SEL new);

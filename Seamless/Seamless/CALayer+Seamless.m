@@ -15,6 +15,7 @@
 #import "Seamless.h"
 #import <objc/runtime.h>
 #import "CATransaction+Seamless.h"
+#import "CABasicAnimation+Seamless.h"
 #import "Inslerpolate.h"
 
 
@@ -56,7 +57,7 @@ static NSUInteger seamlessAnimationCount = 0;
         id theValue = [self valueForKeyPath:theKey];
         if ([theValue respondsToSelector:@selector(objCType)]) {
             const char *objCType = [theValue objCType];
-            if (strcmp(objCType,@encode(CGPoint))==0 || strcmp(objCType,@encode(CGSize))==0 || strcmp(objCType,@encode(CGRect))==0 || strcmp(objCType,@encode(CATransform3D))==0 || strcmp(objCType,@encode(CGFloat))==0 || strcmp(objCType,@encode(float))==0 || strcmp(objCType,@encode(double))==0) {
+            if (strcmp(objCType,@encode(CGPoint))==0 || strcmp(objCType,@encode(CGSize))==0 || strcmp(objCType,@encode(CGRect))==0 || strcmp(objCType,@encode(CATransform3D))==0 || strcmp(objCType,@encode(float))==0 || strcmp(objCType,@encode(double))==0) {
                 [CATransaction begin];
                 [CATransaction setDisableActions:YES];
                 [self.seamlessPreviousLayer setValue:[self valueForKey:theKey] forKey:theKey];
@@ -67,139 +68,95 @@ static NSUInteger seamlessAnimationCount = 0;
 	[self seamlessLayerSwizzleWillChangeValueForKey:theKey];
 }
 
+const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSeamless) {
+    return (isSeamless) ? (1-progress) * (old-nu) : old+(progress*(nu-old));
+}
 -(void)seamlessLayerSwizzleAddAnimation:(CAAnimation*)theAnimation forKey:(NSString*)theKey { // I do this here because in animationForKey: and actionForKey: the fromValue is set to the presentationLayer value, but keyPath, toValue, and byValue are null. Key is known but conversions to keyPath are not, for example frameOrigin to layer.position.
-    BOOL theSeamless = ([theAnimation isKindOfClass:[CABasicAnimation class]] && [[(CABasicAnimation*)theAnimation valueForKey:@"seamless"] boolValue]);
-    BOOL isSeamlessClass = [theAnimation isKindOfClass:[SeamlessAnimation class]];
     
-    SeamlessTimingBlock theTransactionBlock = [CATransaction seamlessTimingBlock];
-    SeamlessTimingBlock theAnimationBlock = nil;
-    if (isSeamlessClass) theAnimationBlock = [(SeamlessAnimation*)theAnimation timingBlock];
-    if (theSeamless || isSeamlessClass || theTransactionBlock) {
-        NSString *theKeyPath = nil;
-        if (isSeamlessClass) theKeyPath = [(SeamlessAnimation*)theAnimation keyPath];
-        else theKeyPath = [(CABasicAnimation*)theAnimation keyPath];
-        if (theKeyPath == nil) theKeyPath = theKey; // At one point some appKit default animations had a keyPath of nil, is this still true?
-        id theOldValue = [self.seamlessPreviousLayer valueForKeyPath:theKeyPath];
-        if (isSeamlessClass && [(SeamlessAnimation*)theAnimation oldValue] != nil) theOldValue = [(SeamlessAnimation*)theAnimation oldValue];
-        
-        if (theOldValue != nil && [theOldValue respondsToSelector:@selector(objCType)]) {
-            const char *objCType = [theOldValue objCType];
-            id theNewValue = [self valueForKeyPath:theKeyPath];
-            if (isSeamlessClass && [(SeamlessAnimation*)theAnimation nuValue] != nil) theNewValue = [(SeamlessAnimation*)theAnimation nuValue];
-            CAKeyframeAnimation *theKeyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:theKeyPath];
-            CAMediaTimingFunction *perfectTimingFunction = [CAMediaTimingFunction functionWithControlPoints:0.5 :0.0 :0.5 :1.0f];
-            theKeyframeAnimation.fillMode = kCAFillModeBackwards; // In case mediaTiming is off by a small amount. It can happen post 10.5 Leopard
-            theKeyframeAnimation.additive = YES;
-            NSUInteger steps = [CATransaction seamlessSteps];
-            if (!theTransactionBlock && !theAnimationBlock) steps = 2;
-            else if (steps < 2) steps = kSeamlessSteps;
+    if ([theAnimation isKindOfClass:[CABasicAnimation class]]) {
+        CABasicAnimation *theBasicAnimation = (CABasicAnimation*)theAnimation;
+        BOOL isSeamlessClass = [theAnimation isKindOfClass:[SeamlessAnimation class]];
+        BOOL isSeamless = (theBasicAnimation.seamless || [CATransaction seamless]);
+        SeamlessTimingBlock theTimingBlock = theBasicAnimation.seamlessTimingBlock;
+        if (theTimingBlock == nil) theTimingBlock = [CATransaction seamlessTimingBlock];
+        if (isSeamless || theTimingBlock) {
+            NSString *theKeyPath = theBasicAnimation.keyPath;
+            if (theKeyPath == nil) theKeyPath = theKey; // At one point some appKit default animations had a keyPath of nil, is this still true?
             
-            NSArray *(^keyframeValues)(NSValue *(^theValueBlock)(double)) = ^(NSValue *(^theValueBlock)(double)) { // A block that takes a block as an argument.
-                NSMutableArray *theValues = @[].mutableCopy;
-                for (NSUInteger i=0; i<steps; i++) {
-                    double offset = (1.0/(steps-1))*i;
-                    if (theAnimationBlock) offset = theAnimationBlock(offset);
-                    if (theTransactionBlock) offset = theTransactionBlock(offset); // should I enforce 0 and 1 for first and last?
-                    double progress = 1.0 - offset; // This is a private implementation detail. Convert from 0 - 1 to 1 - 0. Timing block is in expected order.
-                    NSValue *theFrame = theValueBlock(progress);
-                    [theValues addObject:theFrame];
-                }
-                return theValues;
-            };
-            
-            if (strcmp(objCType,@encode(CATransform3D))==0) {
-                CATransform3D o = [theOldValue CATransform3DValue];
-                CATransform3D n = [theNewValue CATransform3DValue];
-                CATransform3D d = CATransform3DConcat(o,CATransform3DInvert(n));
+            id theOldValue = nil;
+            if (isSeamlessClass || isSeamless) {
+                if (isSeamlessClass) theOldValue = [(SeamlessAnimation*)theAnimation oldValue];
+                if (theOldValue == nil) theOldValue = [self.seamlessPreviousLayer valueForKeyPath:theKeyPath];
+            } else theOldValue = theBasicAnimation.fromValue;
+
+            if (theOldValue != nil && [theOldValue respondsToSelector:@selector(objCType)]) {
+                const char *objCType = [theOldValue objCType];
+                id theNewValue = [theBasicAnimation toValue];
+                if (isSeamlessClass && [(SeamlessAnimation*)theAnimation nuValue] != nil) theNewValue = [(SeamlessAnimation*)theAnimation nuValue];
+                if (theNewValue == nil) theNewValue = [self valueForKeyPath:theKeyPath];
                 
-                if (!CATransform3DIsIdentity(d)) {
-                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
-                        CATransform3D t = [self seamlessBlendTransform:d to:CATransform3DIdentity progress:1-progress]; // 1-progress because passed argument is from 1 to 0. This is a private implementation detail, other types are easy to interpolate so progress is converted to 1 - 0 which is multiplied by the negative delta.
-                        return [NSValue valueWithCATransform3D:t];
-                    });
-                    [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                    return;
-                }
+                NSString *seamlessKey = (isSeamless) ? [CALayer seamlessAnimationKey] : theKey;
                 
-            } else if (strcmp(objCType,@encode(CGPoint))==0) {
-                CGPoint oldPoint, newPoint;
-#if TARGET_OS_IPHONE
-                oldPoint = [theOldValue CGPointValue];
-                newPoint = [theNewValue CGPointValue];
-#else
-                oldPoint = [theOldValue pointValue];
-                newPoint = [theNewValue pointValue];
-#endif
-                if (oldPoint.x-newPoint.x || oldPoint.y-newPoint.y) {
-                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
-#if TARGET_OS_IPHONE
-                        return [NSValue valueWithCGPoint:CGPointMake(progress * (oldPoint.x-newPoint.x), progress * (oldPoint.y-newPoint.y))];
-#else
-                        return [NSValue valueWithPoint:NSMakePoint(progress * (oldPoint.x-newPoint.x), progress * (oldPoint.y-newPoint.y))];
-#endif
-                    });
-                    [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                    return;
+                CAKeyframeAnimation *theKeyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:theKeyPath];
+                CAMediaTimingFunction *perfectTimingFunction = [CAMediaTimingFunction functionWithControlPoints:0.5 :0.0 :0.5 :1.0f];
+                theKeyframeAnimation.fillMode = theBasicAnimation.fillMode;
+                theKeyframeAnimation.additive = theBasicAnimation.additive;
+                if (isSeamless) {
+                    theKeyframeAnimation.fillMode = kCAFillModeBackwards; // In case mediaTiming is off by a small amount. It can happen post 10.5 Leopard
+                    theKeyframeAnimation.additive = YES;
                 }
-            } else if (strcmp(objCType,@encode(CGRect))==0) {
-                CGRect oldRect, newRect;
+                NSUInteger steps = [theBasicAnimation seamlessSteps];
+                if (!steps) steps = [CATransaction seamlessSteps];
+                if (!theTimingBlock) steps = 2;
+                else if (steps < 2) steps = kSeamlessSteps;
+                
+                NSArray *(^keyframeValues)(NSValue *(^theValueBlock)(double)) = ^(NSValue *(^theValueBlock)(double)) { // A block that takes a block as an argument.
+                    NSMutableArray *theValues = @[].mutableCopy;
+                    for (NSUInteger i=0; i<steps; i++) {
+                        double progress = (1.0/(steps-1))*i;
+                        if (theTimingBlock) progress = theTimingBlock(progress);
+                        NSValue *theFrame = theValueBlock(progress);
+                        [theValues addObject:theFrame];
+                    }
+                    return theValues;
+                };
+                
+                if (strcmp(objCType,@encode(CATransform3D))==0) {
+                    CATransform3D theOld = [theOldValue CATransform3DValue];
+                    CATransform3D theNew = [theNewValue CATransform3DValue];
+                    CATransform3D theFrom = (isSeamless) ? CATransform3DConcat(theOld,CATransform3DInvert(theNew)) : theOld;
+                    CATransform3D theTo = (isSeamless) ? CATransform3DIdentity : theNew;
+                    //if (!CATransform3DIsIdentity(theFrom)) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                            CATransform3D theResult = [self seamlessBlendTransform:theFrom to:theTo progress:progress];
+                            return [NSValue valueWithCATransform3D:theResult];
+                        });
+                        return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                    //}
+                    
+                } else if (strcmp(objCType,@encode(CGPoint))==0) {
+                    CGPoint oldPoint, newPoint;
 #if TARGET_OS_IPHONE
-                oldRect = [theOldValue CGRectValue];
-                newRect = [theNewValue CGRectValue];
+                    oldPoint = [theOldValue CGPointValue];
+                    newPoint = [theNewValue CGPointValue];
 #else
-                oldRect = [theOldValue rectValue];
-                newRect = [theNewValue rectValue];
+                    oldPoint = [theOldValue pointValue];
+                    newPoint = [theNewValue pointValue];
 #endif
-                BOOL rectAnimationIsBroken = YES; // Rect animation was not broken in 10.5 Leopard
-                if (rectAnimationIsBroken) { // create a group animation with position and size sub animations. This cannot be handled in actionForKey because of other problems.
-                    CAKeyframeAnimation *theOriginAnimation = nil;
-                    CAKeyframeAnimation *theSizeAnimation = nil;
-                    CGFloat deltaX = oldRect.origin.x-newRect.origin.x;
-                    CGFloat deltaY = oldRect.origin.y-newRect.origin.y;
-                    if (deltaX || deltaY) {
-                        theOriginAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".origin"]];
-                        theOriginAnimation.values = keyframeValues(^(double progress) {
+                    //if (oldPoint.x-newPoint.x || oldPoint.y-newPoint.y) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                            CGFloat theX = seamlessFloat(oldPoint.x, newPoint.x, progress, isSeamless);
+                            CGFloat theY = seamlessFloat(oldPoint.y, newPoint.y, progress, isSeamless);
 #if TARGET_OS_IPHONE
-                            return [NSValue valueWithCGPoint:CGPointMake(progress * deltaX, progress * deltaY)];
+                            return [NSValue valueWithCGPoint:CGPointMake(theX, theY)];
 #else
-                            return [NSValue valueWithPoint:NSMakePoint(progress * deltaX, progress * deltaY)];
+                            return [NSValue valueWithPoint:NSMakePoint(theX, theY)];
 #endif
                         });
-                        theOriginAnimation.fillMode = kCAFillModeBackwards;
-                        theOriginAnimation.additive = YES;
-                    }
-                    CGFloat deltaW = oldRect.size.width-newRect.size.width;
-                    CGFloat deltaH = oldRect.size.height-newRect.size.height;
-                    if (deltaW || deltaH) {
-                        theSizeAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".size"]];
-                        theSizeAnimation.values = keyframeValues(^(double progress) {
-#if TARGET_OS_IPHONE
-                            return [NSValue valueWithCGSize:CGSizeMake(progress * deltaW, progress * deltaH)];
-#else
-                            return [NSValue valueWithSize:NSMakeSize(progress * deltaW, progress * deltaH)];
-#endif
-                        });
-                        theOriginAnimation.fillMode = kCAFillModeBackwards;
-                        theOriginAnimation.additive = YES;
-                    }
-                    if (theOriginAnimation != nil && theSizeAnimation != nil) {
-                        CAAnimationGroup *theGroupAnimation = [CAAnimationGroup animation];
-                        if (!theTransactionBlock) theGroupAnimation.timingFunction = perfectTimingFunction;
-                        theGroupAnimation.fillMode = kCAFillModeBoth;
-                        theGroupAnimation.animations = [NSArray arrayWithObjects:theOriginAnimation, theSizeAnimation, nil];
-                        [self seamlessLayerSwizzleAddAnimation:theGroupAnimation forKey:[CALayer seamlessAnimationKey]];
-                        return;
-                    } else if (theSizeAnimation != nil) {
-                        if (!theTransactionBlock) theSizeAnimation.timingFunction = perfectTimingFunction;
-                        [self seamlessLayerSwizzleAddAnimation:theSizeAnimation forKey:[CALayer seamlessAnimationKey]];
-                        return;
-                    } else if (theOriginAnimation != nil) {
-                        if (!theTransactionBlock) theOriginAnimation.timingFunction = perfectTimingFunction;
-                        [self seamlessLayerSwizzleAddAnimation:theOriginAnimation forKey:[CALayer seamlessAnimationKey]];
-                        return;
-                    }
-                } else { // rect animation was not broken in 10.5 Leopard:
-                    CGRect oldRect,newRect;
+                        return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                    //}
+                } else if (strcmp(objCType,@encode(CGRect))==0) {
+                    CGRect oldRect, newRect;
 #if TARGET_OS_IPHONE
                     oldRect = [theOldValue CGRectValue];
                     newRect = [theNewValue CGRectValue];
@@ -207,70 +164,147 @@ static NSUInteger seamlessAnimationCount = 0;
                     oldRect = [theOldValue rectValue];
                     newRect = [theNewValue rectValue];
 #endif
-                    CGFloat deltaX = oldRect.origin.x-newRect.origin.x;
-                    CGFloat deltaY = oldRect.origin.y-newRect.origin.y;
-                    CGFloat deltaW = oldRect.size.width-oldRect.size.height;
-                    CGFloat deltaH = oldRect.size.height-newRect.size.height;
-                    if (deltaX || deltaY || deltaW || deltaH) {
-                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                    BOOL rectAnimationIsBroken = YES; // Rect animation was not broken in 10.5 Leopard
+                    if (rectAnimationIsBroken) { // create a group animation with position and size sub animations. This cannot be handled in actionForKey because of other problems.
+                        CAKeyframeAnimation *theOriginAnimation = nil;
+                        CAKeyframeAnimation *theSizeAnimation = nil;
+                        //CGFloat deltaX = oldRect.origin.x-newRect.origin.x;
+                        //CGFloat deltaY = oldRect.origin.y-newRect.origin.y;
+                        //if (deltaX || deltaY) {
+                            theOriginAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".origin"]];
+                            theOriginAnimation.values = keyframeValues(^(double progress) {
+                                CGFloat theX = seamlessFloat(oldRect.origin.x, newRect.origin.x, progress, isSeamless);
+                                CGFloat theY = seamlessFloat(oldRect.origin.y, newRect.origin.y, progress, isSeamless);
 #if TARGET_OS_IPHONE
-                            return [NSValue valueWithCGRect:CGRectMake(progress * deltaX, progress * deltaY, progress * deltaW, progress * deltaH)];
+                                return [NSValue valueWithCGPoint:CGPointMake(theX, theY)];
 #else
-                            return [NSValue valueWithRect:NSMakeRect(progress * deltaX, progress * deltaY, progress * deltaW, progress * deltaH)];
+                                return [NSValue valueWithPoint:NSMakePoint(theX, theY)];
 #endif
-                            
-                        });
-                        [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                        return;
+                            });
+                            theOriginAnimation.fillMode = kCAFillModeBackwards;
+                            theOriginAnimation.additive = YES;
+                        //}
+                        //CGFloat deltaW = oldRect.size.width-newRect.size.width;
+                        //CGFloat deltaH = oldRect.size.height-newRect.size.height;
+                        //if (deltaW || deltaH) {
+                            theSizeAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".size"]];
+                            theSizeAnimation.values = keyframeValues(^(double progress) {
+                                CGFloat theW = seamlessFloat(oldRect.size.width, newRect.size.width, progress, isSeamless);
+                                CGFloat theH = seamlessFloat(oldRect.size.height, newRect.size.height, progress, isSeamless);
+#if TARGET_OS_IPHONE
+                                return [NSValue valueWithCGSize:CGSizeMake(theW, theH)];
+#else
+                                return [NSValue valueWithSize:NSMakeSize(theW, theH)];
+#endif
+                            });
+                            theSizeAnimation.fillMode = kCAFillModeBackwards;
+                            theSizeAnimation.additive = YES;
+                        //}
+                        if (theOriginAnimation != nil && theSizeAnimation != nil) {
+                            CAAnimationGroup *theGroupAnimation = [CAAnimationGroup animation];
+                            if (!theTimingBlock) theGroupAnimation.timingFunction = perfectTimingFunction;
+                            theGroupAnimation.fillMode = kCAFillModeBoth;
+                            theGroupAnimation.animations = [NSArray arrayWithObjects:theOriginAnimation, theSizeAnimation, nil];
+                            return [self seamlessLayerSwizzleAddAnimation:theGroupAnimation forKey:seamlessKey];
+                        } else if (theSizeAnimation != nil) {
+                            if (!theTimingBlock) theSizeAnimation.timingFunction = perfectTimingFunction;
+                            return [self seamlessLayerSwizzleAddAnimation:theSizeAnimation forKey:seamlessKey];
+                        } else if (theOriginAnimation != nil) {
+                            if (!theTimingBlock) theOriginAnimation.timingFunction = perfectTimingFunction;
+                            return [self seamlessLayerSwizzleAddAnimation:theOriginAnimation forKey:seamlessKey];
+                        }
+                    } else { // rect animation was not broken in 10.5 Leopard:
+                        CGRect oldRect,newRect;
+#if TARGET_OS_IPHONE
+                        oldRect = [theOldValue CGRectValue];
+                        newRect = [theNewValue CGRectValue];
+#else
+                        oldRect = [theOldValue rectValue];
+                        newRect = [theNewValue rectValue];
+#endif
+                        //CGFloat deltaX = oldRect.origin.x-newRect.origin.x;
+                        //CGFloat deltaY = oldRect.origin.y-newRect.origin.y;
+                        //CGFloat deltaW = oldRect.size.width-newRect.size.width;
+                        //CGFloat deltaH = oldRect.size.height-newRect.size.height;
+                        //if (deltaX || deltaY || deltaW || deltaH) {
+                            theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                                CGFloat theX = seamlessFloat(oldRect.origin.x, newRect.origin.x, progress, isSeamless);
+                                CGFloat theY = seamlessFloat(oldRect.origin.y, newRect.origin.y, progress, isSeamless);
+                                CGFloat theW = seamlessFloat(oldRect.size.width, newRect.size.width, progress, isSeamless);
+                                CGFloat theH = seamlessFloat(oldRect.size.height, newRect.size.height, progress, isSeamless);
+#if TARGET_OS_IPHONE
+                                return [NSValue valueWithCGRect:CGRectMake(theX, theY, theW, theH)];
+#else
+                                return [NSValue valueWithRect:NSMakeRect(theX, theY, theW, theH)];
+#endif
+                                
+                            });
+                            return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                        //}
                     }
-                }
-            } else if (strcmp(objCType,@encode(CGSize))==0) {
-                CGSize oldSize, newSize;
+                } else if (strcmp(objCType,@encode(CGSize))==0) {
+                    CGSize oldSize, newSize;
 #if TARGET_OS_IPHONE
-                oldSize = [theOldValue CGSizeValue];
-                newSize = [theNewValue CGSizeValue];
+                    oldSize = [theOldValue CGSizeValue];
+                    newSize = [theNewValue CGSizeValue];
 #else
-                oldSize = [theOldValue sizeValue];
-                newSize = [theNewValue sizeValue];
+                    oldSize = [theOldValue sizeValue];
+                    newSize = [theNewValue sizeValue];
 #endif
-                CGFloat deltaW = oldSize.width-newSize.width;
-                CGFloat deltaH = oldSize.height-newSize.height;
-                if (deltaW || deltaH) {
-                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                    //CGFloat deltaW = oldSize.width-newSize.width;
+                    //CGFloat deltaH = oldSize.height-newSize.height;
+                    //if (deltaW || deltaH) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                            CGFloat theW = seamlessFloat(oldSize.width, newSize.width, progress, isSeamless);
+                            CGFloat theH = seamlessFloat(oldSize.height, newSize.height, progress, isSeamless);
 #if TARGET_OS_IPHONE
-                        return [NSValue valueWithCGSize:CGSizeMake(progress * deltaW, progress * deltaH)];
+                            return [NSValue valueWithCGSize:CGSizeMake(theW, theH)];
 #else
-                        return [NSValue valueWithSize:NSMakeSize(progress * deltaW, progress * deltaH)];
+                            return [NSValue valueWithSize:NSMakeSize(theW, theH)];
 #endif
-                    });
-                    [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                    return;
-                }
-            } else if (strcmp(objCType,@encode(CGFloat))==0 || strcmp(objCType,@encode(float))==0) {
-                CGFloat oldFloat = [theOldValue floatValue];
-                CGFloat newFloat = [theNewValue floatValue];
-                CGFloat deltaFloat = oldFloat-newFloat;
-                if (deltaFloat) {
-                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
-                        NSNumber *theReturnValue = [NSNumber numberWithFloat:progress * deltaFloat];
-                        return theReturnValue;
-                    });
-                    [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                    return;
-                }
-            } else if (strcmp(objCType,@encode(double))==0) {
-                double oldDouble = [theOldValue doubleValue];
-                double newDouble = [theNewValue doubleValue];
-                double deltaDouble = oldDouble-newDouble;
-                if (deltaDouble) {
-                    theKeyframeAnimation.values = keyframeValues(^(double progress) {
-                        NSNumber *theReturnValue = [NSNumber numberWithDouble:progress * deltaDouble];
-                        return theReturnValue;
-                    });
-                    [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:[CALayer seamlessAnimationKey]];
-                    return;
-                }
-            } // else NSLog(@"unknown objCType:%@;",[[NSString alloc] initWithCString:objCType encoding:NSASCIIStringEncoding]);
+                        });
+                        return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                    //}
+                } else if (strcmp(objCType,@encode(float))==0) {
+                    float oldFloat = [theOldValue floatValue];
+                    float newFloat = [theNewValue floatValue];
+                    //float deltaFloat = oldFloat-newFloat;
+                    //if (deltaFloat) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                            return [NSNumber numberWithFloat:seamlessFloat(oldFloat, newFloat, progress, isSeamless)];
+                        });
+                        return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                    //}
+                } else if (strcmp(objCType,@encode(double))==0) {
+                    double old = [theOldValue doubleValue];
+                    double nu = [theNewValue doubleValue];
+                    //double deltaDouble = oldDouble-newDouble;
+                    //if (deltaDouble) {
+                        theKeyframeAnimation.values = keyframeValues(^(double progress) {
+                            return [NSNumber numberWithDouble:(isSeamless) ? (1-progress) * (old-nu) : old+(progress*(nu-old))];
+                        });
+                        return [self seamlessLayerSwizzleAddAnimation:theKeyframeAnimation forKey:seamlessKey];
+                    //}
+                }// else NSLog(@"unknown objCType:%@;",[[NSString alloc] initWithCString:objCType encoding:NSASCIIStringEncoding]);
+                /*
+                – boolValue
+                – charValue
+                – decimalValue
+                – doubleValue
+                – floatValue
+                – intValue
+                – integerValue
+                – longLongValue
+                – longValue
+                – shortValue
+                – unsignedCharValue
+                – unsignedIntegerValue
+                – unsignedIntValue
+                – unsignedLongLongValue
+                – unsignedLongValue
+                – unsignedShortValue
+                */
+            }
         }
     }
     [self seamlessLayerSwizzleAddAnimation:theAnimation forKey:theKey];
