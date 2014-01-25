@@ -76,7 +76,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
     if ([theAnimation isKindOfClass:[CABasicAnimation class]]) {
         CABasicAnimation *theBasicAnimation = (CABasicAnimation*)theAnimation;
         BOOL isSeamlessClass = [theAnimation isKindOfClass:[SeamlessAnimation class]];
-        BOOL isSeamless = (theBasicAnimation.seamless || [CATransaction seamless]);
+        BOOL isSeamless = (theBasicAnimation.seamlessNegativeDelta || [CATransaction seamlessNegativeDelta]);
         SeamlessTimingBlock theTimingBlock = theBasicAnimation.seamlessTimingBlock;
         if (theTimingBlock == nil) theTimingBlock = [CATransaction seamlessTimingBlock];
         if (isSeamless || theTimingBlock) {

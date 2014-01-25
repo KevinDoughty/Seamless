@@ -20,7 +20,7 @@
     SeamlessAnimation *theAnimation = [super animation];
     theAnimation.additive = YES;
     theAnimation.fillMode = kCAFillModeBackwards;
-    theAnimation.seamless = YES;
+    theAnimation.seamlessNegativeDelta = YES;
     return theAnimation;
 }
 +(instancetype)animationWithKeyPath:(NSString*)thePath {
@@ -40,11 +40,11 @@
 -(NSUInteger)seamlessSteps {
     return [super seamlessSteps];
 }
--(void)setSeamless:(BOOL)theSeamless {
-    [super setSeamless:theSeamless];
+-(void)setSeamlessNegativeDelta:(BOOL)theSeamless {
+    [super setSeamlessNegativeDelta:theSeamless];
 }
--(BOOL)seamless {
-    return [super seamless];
+-(BOOL)seamlessNegativeDelta {
+    return [super seamlessNegativeDelta];
 }
 
 @end

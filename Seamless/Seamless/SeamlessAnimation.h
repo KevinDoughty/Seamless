@@ -21,12 +21,12 @@
 //@property (nonatomic, copy) double (^fancyBlock)(double);
 //-(void)setFancyBlock:(double (^)(double))theBlock;
 
--(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;
--(SeamlessTimingBlock)seamlessTimingBlock;
+-(void)setSeamlessTimingBlock:(double(^)(double))theBlock;
+-(double(^)(double))seamlessTimingBlock;
 -(void)setSeamlessSteps:(NSUInteger)theSteps;
 -(NSUInteger)seamlessSteps;
--(void)setSeamless:(BOOL)theSeamless;
--(BOOL)seamless;
+-(void)setSeamlessNegativeDelta:(BOOL)theSeamless;
+-(BOOL)seamlessNegativeDelta;
 
 @property (copy) id oldValue; // previousValue?
 @property (copy) id nuValue; // currentValue?

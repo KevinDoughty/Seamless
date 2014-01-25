@@ -153,7 +153,7 @@
     else {
         self.layerIndex = [self.layer.sublayers indexOfObject:theLayer];
         [CATransaction setAnimationDuration:self.animationDuration];
-        [CATransaction setSeamless:YES];
+        [CATransaction setSeamlessNegativeDelta:YES];
         [CATransaction setSeamlessTimingBlock:^ (double progress) {
             double omega = 20.0;
             double zeta = 0.75;

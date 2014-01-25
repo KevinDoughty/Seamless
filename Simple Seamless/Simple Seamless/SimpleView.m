@@ -43,7 +43,7 @@
 -(void) mouseDown:(NSEvent*)theEvent {
     CGPoint sanePoint = [self sanePointFromEvent:theEvent];
 	[CATransaction setAnimationDuration:[self animationDuration]];
-    [CATransaction setSeamless:YES];
+    [CATransaction setSeamlessNegativeDelta:YES];
     [CATransaction setSeamlessTimingBlock:[self timingBlock]];
     [CATransaction setCompletionBlock:[self completionBlock]];
 	ball.position = sanePoint;
@@ -53,7 +53,7 @@
 	CGPoint sanePoint = [self sanePointFromEvent:theEvent];
 	[self hoverCheckPoint:sanePoint];
 	[CATransaction setAnimationDuration:[self animationDuration]];
-    [CATransaction setSeamless:YES];
+    [CATransaction setSeamlessNegativeDelta:YES];
     [CATransaction setSeamlessTimingBlock:[self timingBlock]];
     [CATransaction setCompletionBlock:[self completionBlock]];
 	ball.position = sanePoint;
@@ -76,7 +76,7 @@
 -(void) hoverCheckPoint:(CGPoint)where { // Many, many transform animations get added to the ball from mouseMoved:
     CALayer *theLayer = [(CALayer*)[ball presentationLayer] hitTest:where];
 	[CATransaction setAnimationDuration:[self animationDuration]];
-    [CATransaction setSeamless:YES];
+    [CATransaction setSeamlessNegativeDelta:YES];
     [CATransaction setSeamlessTimingBlock:[self timingBlock]];
 	if (theLayer == nil || hypot(theLayer.position.x - where.x, theLayer.position.y - where.y)  > theLayer.frame.size.width/2.0 ) {
 		//ball.opacity = 1.0;

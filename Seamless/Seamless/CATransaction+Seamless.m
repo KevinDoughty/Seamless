@@ -15,10 +15,10 @@
 
 @implementation CATransaction (Seamless)
 
-+(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock {
++(void)setSeamlessTimingBlock:(double(^)(double))theBlock {
 	[self setValue:[theBlock copy] forKey:@"seamlessSeamlessTimingBlock"];
 }
-+(SeamlessTimingBlock)seamlessTimingBlock {
++(double(^)(double))seamlessTimingBlock {
     return [self valueForKey:@"seamlessSeamlessTimingBlock"];
 }
 +(void)setSeamlessSteps:(NSUInteger)theSteps {
@@ -27,11 +27,11 @@
 +(NSUInteger)seamlessSteps {
     return [[self valueForKey:@"seamlessSeamlessSteps"] unsignedIntegerValue];
 }
-+(void)setSeamless:(BOOL)theSeamless {
-	[self setValue:@(theSeamless) forKey:@"seamlessSeamless"];
++(void)setSeamlessNegativeDelta:(BOOL)theSeamless {
+	[self setValue:@(theSeamless) forKey:@"seamlessSeamlessNegativeDelta"];
 }
-+(BOOL)seamless {
-    return [[self valueForKey:@"seamlessSeamless"] boolValue];
++(BOOL)seamlessNegativeDelta {
+    return [[self valueForKey:@"seamlessSeamlessNegativeDelta"] boolValue];
 }
 
 @end

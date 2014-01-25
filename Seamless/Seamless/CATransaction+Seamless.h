@@ -17,11 +17,11 @@ typedef double(^SeamlessTimingBlock)(double);
 
 @interface CATransaction (Seamless)
 
-+(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock;
-+(SeamlessTimingBlock)seamlessTimingBlock;
++(void)setSeamlessTimingBlock:(double(^)(double))theBlock;
++(double(^)(double))seamlessTimingBlock;
 +(void)setSeamlessSteps:(NSUInteger)theSteps;
 +(NSUInteger)seamlessSteps;
-+(void)setSeamless:(BOOL)theSeamless;
-+(BOOL)seamless;
++(void)setSeamlessNegativeDelta:(BOOL)theSeamless;
++(BOOL)seamlessNegativeDelta;
 
 @end

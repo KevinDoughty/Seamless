@@ -14,7 +14,7 @@ This is the best technique for responding to rapid user events.
 
 ### CATransaction
 
-#### `+(void)setSeamless:(BOOL)theSeamless`
+#### `+(void)setSeamlessNegativeDelta:(BOOL)theSeamless`
 
 Uses additive,
 enables negative delta animation, 
@@ -47,6 +47,7 @@ This gives a nice elastic wobble and is based on math from Matt Gallager's excel
 
 ```objc
 [CATransaction setAnimationDuration:3.0];
+[CATransaction setSeamlessNegativeDelta:YES];
 [CATransaction setSeamlessTimingBlock:^ (double progress) {
 	double omega = 20.0;
 	double zeta = 0.5;
@@ -60,7 +61,7 @@ theSecondLayer.transform = CATransform3DMakeRotation(M_PI_2, 0, 0, 1);
 
 ### CABasicAnimation
 
-#### `-(void)setSeamless:(BOOL)theSeamless`
+#### `-(void)setSeamlessNegativeDelta:(BOOL)theSeamless`
 
 Overrides transaction value, with the same effect.
 

@@ -18,10 +18,10 @@
 
 @implementation NSAnimationContext (Seamless)
 
--(void)setSeamlessTimingBlock:(SeamlessTimingBlock)theBlock {
+-(void)setSeamlessTimingBlock:(double(^)(double))theBlock {
 	[CATransaction setSeamlessTimingBlock:theBlock];
 }
--(SeamlessTimingBlock)seamlessTimingBlock {
+-(double(^)(double))seamlessTimingBlock {
     return [CATransaction seamlessTimingBlock];
 }
 -(void)setSeamlessSteps:(NSUInteger)theSteps {
@@ -30,11 +30,11 @@
 -(NSUInteger)seamlessSteps {
     return [CATransaction seamlessSteps];
 }
--(void)setSeamless:(BOOL)theSeamless {
-    [CATransaction setSeamless:theSeamless];
+-(void)setSeamlessNegativeDelta:(BOOL)theSeamless {
+    [CATransaction setSeamlessNegativeDelta:theSeamless];
 }
--(BOOL)seamless {
-    return [CATransaction seamless];
+-(BOOL)seamlessNegativeDelta {
+    return [CATransaction seamlessNegativeDelta];
 }
 
 @end

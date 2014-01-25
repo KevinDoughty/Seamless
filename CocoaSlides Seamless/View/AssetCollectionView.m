@@ -151,14 +151,14 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
     }
     if (layout) {
         // Push an NSAnimationContext on the animation context stack, and set its duration to the desired amount of time (expressed in seconds).  All animations initiated within this grouping will be given the same implied start time and duration.
-        [NSAnimationContext beginGrouping];
-        NSAnimationContext *ctx = [NSAnimationContext currentContext];
-        ctx.duration = [self layoutDuration];
-        ctx.seamless = YES;
-        ctx.seamlessTimingBlock = ^ (double progress) {
+        //[NSAnimationContext beginGrouping];
+        NSAnimationContext *context = [NSAnimationContext currentContext];
+        context.duration = [self layoutDuration];
+        context.seamlessNegativeDelta = YES;
+        context.seamlessTimingBlock = ^ (double progress) {
+            progress = 1 - cosf( progress * M_PI / 2 );
             double omega = 20.0;
             double zeta = 0.75;
-            progress = 1 - cosf( progress * M_PI / 2 );
 			double beta = sqrt(1.0 - zeta * zeta);
 			progress = 1.0 / beta * expf(-zeta * omega * progress) * sinf(beta * omega * progress + atanf(beta / zeta));
 			return 1-progress;
@@ -167,7 +167,7 @@ Copyright © 2006 Apple Computer, Inc., All Rights Reserved
         [layout layoutSubviews:[self animatorsForArrangedSubviews] ofView:self];
 
         // Pop the NSAnimationContext, triggering execution of the animations we just grouped in a single time-syncrhonized batch.
-        [NSAnimationContext endGrouping];
+        //[NSAnimationContext endGrouping];
     }
 }
 
