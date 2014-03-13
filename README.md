@@ -106,6 +106,10 @@ Inslerpolate.c is adapted from WebKit source and released under a separate licen
 
 ## TODO:
 
+Add a key naming behavior property and enum, which is needed if you want to retrieve animations for copying and applying them to newly inserted layers.
+
+Because completely new animations are created and replace the passed in animations, arbitrary animation dictionaries and animation delegates are not respected. I should hold on to the original animation for this.
+
 Documentation unfinished.
 
 Need iOS examples.
