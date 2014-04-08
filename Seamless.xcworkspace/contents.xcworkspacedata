@@ -13,4 +13,7 @@
    <FileRef
       location = "group:Simple Seamless/Simple Seamless.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Touches_GestureRecognizers/Touches.xcodeproj">
+   </FileRef>
 </Workspace>
