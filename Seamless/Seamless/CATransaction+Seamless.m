@@ -33,5 +33,4 @@
 +(BOOL)seamlessNegativeDelta {
     return [[self valueForKey:@"seamlessSeamlessNegativeDelta"] boolValue];
 }
-
 @end

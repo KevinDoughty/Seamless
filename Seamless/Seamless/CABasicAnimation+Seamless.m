@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Kevin Doughty. All rights reserved.
 //
 
-#import "CABasicAnimation+Seamless.h"
+#import "Seamless.h" // This imports CABasicAnimation+Seamless.h. Poor style.
 
 @implementation CABasicAnimation (Seamless)
 
@@ -27,6 +27,12 @@
 }
 -(BOOL)seamlessNegativeDelta {
     return [[self valueForKey:@"seamlessSeamlessNegativeDelta"] boolValue];
+}
+-(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior {
+    [self setValue:@(theBehavior) forKey:@"seamlessSeamlessKeyBehavior"];
+}
+-(SeamlessKeyBehavior)seamlessKeyBehavior {
+    return (SeamlessKeyBehavior)[[self valueForKey:@"seamlessSeamlessKeyBehavior"] integerValue];
 }
 
 @end

@@ -13,7 +13,14 @@
 
 #import <Seamless/SeamlessAnimation.h>
 #import <Seamless/CATransaction+Seamless.h>
-#import <Seamless/NSAnimationContext+Seamless.h>
 #import <Seamless/CABasicAnimation+Seamless.h>
+#if TARGET_OS_IPHONE
+#else
+#import <Seamless/NSAnimationContext+Seamless.h>
+#endif
 
 void seamlessSwizzle(Class c, SEL orig, SEL new);
+
+@interface Seamless : NSObject
++(instancetype)singleton; // Animations are replaced. This acts as animation delegate if set in original animation, passing message along.
+@end

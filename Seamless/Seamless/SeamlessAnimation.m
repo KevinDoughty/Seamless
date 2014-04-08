@@ -21,6 +21,7 @@
     theAnimation.additive = YES;
     theAnimation.fillMode = kCAFillModeBackwards;
     theAnimation.seamlessNegativeDelta = YES;
+    theAnimation.seamlessKeyBehavior = seamlessKeyNil;
     return theAnimation;
 }
 +(instancetype)animationWithKeyPath:(NSString*)thePath {
@@ -45,6 +46,12 @@
 }
 -(BOOL)seamlessNegativeDelta {
     return [super seamlessNegativeDelta];
+}
+-(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior {
+    [super setSeamlessKeyBehavior:theBehavior];
+}
+-(SeamlessKeyBehavior)seamlessKeyBehavior {
+    return [super seamlessKeyBehavior];
 }
 
 @end

@@ -12,6 +12,7 @@
  */
 
 #import <objc/runtime.h>
+#import "Seamless.h"
 
 void seamlessSwizzle(Class c, SEL orig, SEL new) {
     Method origMethod = class_getInstanceMethod(c, orig);
@@ -20,3 +21,30 @@ void seamlessSwizzle(Class c, SEL orig, SEL new) {
         class_replaceMethod(c, new, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
     else method_exchangeImplementations(origMethod, newMethod);
 }
+
+@implementation Seamless
+
++(instancetype)singleton {
+    static dispatch_once_t pred;
+    static Seamless *shared = nil;
+    
+    dispatch_once(&pred, ^{
+        shared = [[Seamless alloc] init];
+    });
+    return shared;
+}
+- (void)animationDidStart:(CAAnimation *)theAnimation {
+    CAAnimation *theOriginal = [theAnimation valueForKey:@"seamlessOriginalAnimation"];
+    if ([theOriginal.delegate respondsToSelector:@selector(animationDidStart:)]) {
+        [theOriginal.delegate animationDidStart:theOriginal];
+    }
+    
+}
+-(void)animationDidStop:(CAAnimation*)theAnimation finished:(BOOL)theFinished {
+    CAAnimation *theOriginal = [theAnimation valueForKey:@"seamlessOriginalAnimation"];
+    if ([theOriginal.delegate respondsToSelector:@selector(animationDidStop:finished:)]) {
+        [theOriginal.delegate animationDidStop:theOriginal finished:theFinished];
+    }
+    //[theAnimation setValue:nil forKey:@"seamlessOriginalAnimation"];
+}
+@end
