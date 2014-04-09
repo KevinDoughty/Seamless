@@ -74,41 +74,6 @@ A useful technique is copying animations from one layer and applying them to new
 Otherwise it would be difficult to reproduce existing animations triggered by user interaction.
 In this case a unique key is needed to recall animations using -animationKeys and -animationForKey:.
 
-#### `typedef enum SeamlessKeyBehavior`
-
-##### `seamlessKeyDefault`
-
-If seamlessNegativeDelta == YES this will use a nil key, 
-otherwise it will respect default Core Animation behavior of using the exact key as passed.
-
-##### `seamlessKeyExact`
-
-Use the exact key as passed to addAnimation:forKey: 
-(Useful if you have your own scheme for creating unique keys, for recalling them, most likely to copy animations.)
-    
-##### `seamlessKeyNil`
-
-Use a nil key regardless of what was passed in addAnimation:forKey:
-
-##### `seamlessKeyIncrement`
-
-Deprecated. Just a string representation of an incremented integer. 
-The key passed to addAnimation:forKey: is ignored.
-
-##### `seamlessKeyIncrementKey`
-
-The used key becomes the key passed to addAnimation:forKey: 
-plus an appended string representation of an incremented integer.
-If the key passed in addAnimation:forKey: is nil you get just the integer.
-
-##### `seamlessKeyIncrementKeyPath`
-
-The used key becomes the animated key path plus an appended string representation of an incremented integer.
-
-#### `typedef double(^SeamlessTimingBlock)(double);`
-
-A convenience typedef for difficult block syntax.
-
 ### `CABasicAnimation`
 
 #### `-(void)setSeamlessNegativeDelta:(BOOL)theSeamless`
@@ -164,6 +129,41 @@ If unset, the layer's previous model value is used.
 
 Optional. The layer's current ("new") model value or what it is supposed to appear to be.
 Behind the scenes, the actual animation destination is zero.
+
+### `typedef enum SeamlessKeyBehavior`
+
+#### `seamlessKeyDefault`
+
+If seamlessNegativeDelta == YES this will use a nil key, 
+otherwise it will respect default Core Animation behavior of using the exact key as passed.
+
+#### `seamlessKeyExact`
+
+Use the exact key as passed to addAnimation:forKey: 
+(Useful if you have your own scheme for creating unique keys, for recalling them, most likely to copy animations.)
+    
+#### `seamlessKeyNil`
+
+Use a nil key regardless of what was passed in addAnimation:forKey:
+
+#### `seamlessKeyIncrement`
+
+Deprecated. Just a string representation of an incremented integer. 
+The key passed to addAnimation:forKey: is ignored.
+
+#### `seamlessKeyIncrementKey`
+
+The used key becomes the key passed to addAnimation:forKey: 
+plus an appended string representation of an incremented integer.
+If the key passed in addAnimation:forKey: is nil you get just the integer.
+
+#### `seamlessKeyIncrementKeyPath`
+
+The used key becomes the animated key path plus an appended string representation of an incremented integer.
+
+### `typedef double(^SeamlessTimingBlock)(double);`
+
+A convenience typedef for difficult block syntax.
 
 ## Examples
 
