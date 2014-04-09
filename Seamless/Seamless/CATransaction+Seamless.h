@@ -12,8 +12,7 @@
  */
 
 #import <QuartzCore/QuartzCore.h>
-
-typedef double(^SeamlessTimingBlock)(double);
+#import "SeamlessDefinitions.h"
 
 @interface CATransaction (Seamless)
 
@@ -23,5 +22,7 @@ typedef double(^SeamlessTimingBlock)(double);
 +(NSUInteger)seamlessSteps;
 +(void)setSeamlessNegativeDelta:(BOOL)theSeamless;
 +(BOOL)seamlessNegativeDelta;
++(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior;
++(SeamlessKeyBehavior)seamlessKeyBehavior;
 
 @end

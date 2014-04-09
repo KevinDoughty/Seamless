@@ -12,10 +12,20 @@
  */
 
 #import "CALayer+Seamless.h"
-#import "Seamless.h"
+#import "SeamlessDelegate.h"
+#import "CABasicAnimation+Seamless.h"
+#import "CATransaction+Seamless.h"
+#import "SeamlessAnimation.h"
 #import "Inslerpolate.h"
+#import <objc/runtime.h>
 
 #define kSeamlessSteps 100
+
+
+@interface SeamlessDelegate ()
++(instancetype)singleton; // Animations are replaced. This acts as animation delegate if set in original animation, passing message along.
+@end
+
 
 @interface CALayer ()
 @property (readonly) CALayer *seamlessPreviousLayer;
@@ -23,6 +33,15 @@
 
 
 static NSUInteger seamlessAnimationCount = 0;
+
+void seamlessSwizzle(Class c, SEL orig, SEL new) {
+    Method origMethod = class_getInstanceMethod(c, orig);
+    Method newMethod = class_getInstanceMethod(c, new);
+    if (class_addMethod(c, orig, method_getImplementation(newMethod), method_getTypeEncoding(newMethod)))
+        class_replaceMethod(c, new, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
+    else method_exchangeImplementations(origMethod, newMethod);
+}
+
 
 @implementation CALayer (Seamless)
 
@@ -97,15 +116,18 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                 if (isSeamlessClass && [(SeamlessAnimation*)theAnimation nuValue] != nil) theNewValue = [(SeamlessAnimation*)theAnimation nuValue];
                 if (theNewValue == nil) theNewValue = [self valueForKeyPath:theKeyPath];
                 
+                
+                SeamlessKeyBehavior animationBehavior = [theBasicAnimation seamlessKeyBehavior];
+                if (animationBehavior == seamlessKeyDefault) animationBehavior = [CATransaction seamlessKeyBehavior];
                 NSString *seamlessKey = theKey;
-                if (theBasicAnimation.seamlessKeyBehavior == seamlessKeyExact) {
+                if (animationBehavior == seamlessKeyExact) {
                     seamlessKey = theKey; // duplicated code but prevents seamlessKeyDefault behavior
-                } else if (theBasicAnimation.seamlessKeyBehavior == seamlessKeyIncrement) {
+                } else if (animationBehavior == seamlessKeyIncrement) {
                     seamlessKey = [CALayer seamlessAnimationKey];
-                } else if (theBasicAnimation.seamlessKeyBehavior == seamlessKeyIncrementKey) {
+                } else if (animationBehavior == seamlessKeyIncrementKey) {
                     if (theKey == nil) seamlessKey = [CALayer seamlessAnimationKey];
                     else seamlessKey = [theKey stringByAppendingString:[CALayer seamlessAnimationKey]];
-                } else if (theBasicAnimation.seamlessKeyBehavior == seamlessKeyIncrementKeyPath) {
+                } else if (animationBehavior == seamlessKeyIncrementKeyPath) {
                     seamlessKey = [theKeyPath stringByAppendingString:[CALayer seamlessAnimationKey]];
                 } else if (isSeamless) {
                     seamlessKey = nil; // seamlessKeyDefault is nil if seamlessNegativeDelta
@@ -116,7 +138,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                 CAKeyframeAnimation *theKeyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:theKeyPath];
                 [theKeyframeAnimation setValue:theAnimation forKey:@"seamlessOriginalAnimation"];
                 theKeyframeAnimation.duration = theAnimation.duration;
-                if (theAnimation.delegate) theKeyframeAnimation.delegate = [Seamless singleton];
+                if (theAnimation.delegate) theKeyframeAnimation.delegate = [SeamlessDelegate singleton];
                 
                 [theAnimation setValue:theKeyframeAnimation forKey:@"seamlessReplacedAnimation"];
                 
@@ -241,7 +263,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                             [theGroupAnimation setValue:[theBasicAnimation valueForKey:theKey] forKey:theKey];
                         }
                         
-                        if (theAnimation.delegate) theGroupAnimation.delegate = [Seamless singleton];
+                        if (theAnimation.delegate) theGroupAnimation.delegate = [SeamlessDelegate singleton];
                         theGroupAnimation.duration = theAnimation.duration;
                         theGroupAnimation.beginTime = theBasicAnimation.beginTime;
                         theGroupAnimation.timeOffset = theBasicAnimation.timeOffset;

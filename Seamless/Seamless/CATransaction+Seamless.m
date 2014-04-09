@@ -33,4 +33,11 @@
 +(BOOL)seamlessNegativeDelta {
     return [[self valueForKey:@"seamlessSeamlessNegativeDelta"] boolValue];
 }
++(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior {
+    [self setValue:@(theBehavior) forKey:@"seamlessSeamlessKeyBehavior"];
+}
++(SeamlessKeyBehavior)seamlessKeyBehavior {
+    return (SeamlessKeyBehavior)[[self valueForKey:@"seamlessSeamlessKeyBehavior"] integerValue];
+}
+
 @end

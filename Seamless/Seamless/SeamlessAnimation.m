@@ -13,6 +13,7 @@
 
 #import "SeamlessAnimation.h"
 #import "CABasicAnimation+Seamless.h"
+#import "SeamlessDefinitions.h"
 
 @implementation SeamlessAnimation
 
@@ -21,7 +22,7 @@
     theAnimation.additive = YES;
     theAnimation.fillMode = kCAFillModeBackwards;
     theAnimation.seamlessNegativeDelta = YES;
-    theAnimation.seamlessKeyBehavior = seamlessKeyNil;
+    theAnimation.seamlessKeyBehavior = seamlessKeyDefault;
     return theAnimation;
 }
 +(instancetype)animationWithKeyPath:(NSString*)thePath {

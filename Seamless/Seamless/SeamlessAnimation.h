@@ -12,10 +12,12 @@
  */
 
 #import <QuartzCore/QuartzCore.h>
-#import "CATransaction+Seamless.h"
-#import "CABasicAnimation+Seamless.h"
+#import "SeamlessDefinitions.h"
 
 @interface SeamlessAnimation : CABasicAnimation
+
+@property (copy) id oldValue; // previousValue
+@property (copy) id nuValue; // currentValue
 
 -(void)setSeamlessTimingBlock:(double(^)(double))theBlock;
 -(double(^)(double))seamlessTimingBlock;
@@ -25,8 +27,5 @@
 -(BOOL)seamlessNegativeDelta;
 -(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior;
 -(SeamlessKeyBehavior)seamlessKeyBehavior;
-
-@property (copy) id oldValue; // previousValue
-@property (copy) id nuValue; // currentValue
 
 @end

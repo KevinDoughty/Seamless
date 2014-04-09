@@ -11,25 +11,15 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <objc/runtime.h>
-#import "Seamless.h"
+#import "SeamlessDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 
-void seamlessSwizzle(Class c, SEL orig, SEL new) {
-    Method origMethod = class_getInstanceMethod(c, orig);
-    Method newMethod = class_getInstanceMethod(c, new);
-    if (class_addMethod(c, orig, method_getImplementation(newMethod), method_getTypeEncoding(newMethod)))
-        class_replaceMethod(c, new, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
-    else method_exchangeImplementations(origMethod, newMethod);
-}
-
-@implementation Seamless
-
+@implementation SeamlessDelegate
 +(instancetype)singleton {
     static dispatch_once_t pred;
-    static Seamless *shared = nil;
-    
+    static SeamlessDelegate *shared = nil;
     dispatch_once(&pred, ^{
-        shared = [[Seamless alloc] init];
+        shared = [[SeamlessDelegate alloc] init];
     });
     return shared;
 }
@@ -38,7 +28,6 @@ void seamlessSwizzle(Class c, SEL orig, SEL new) {
     if ([theOriginal.delegate respondsToSelector:@selector(animationDidStart:)]) {
         [theOriginal.delegate animationDidStart:theOriginal];
     }
-    
 }
 -(void)animationDidStop:(CAAnimation*)theAnimation finished:(BOOL)theFinished {
     CAAnimation *theOriginal = [theAnimation valueForKey:@"seamlessOriginalAnimation"];

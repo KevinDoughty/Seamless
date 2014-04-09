@@ -16,6 +16,7 @@
 
 #import "NSAnimationContext+Seamless.h"
 #import "CATransaction+Seamless.h"
+#import "SeamlessDefinitions.h"
 
 @implementation NSAnimationContext (Seamless)
 
@@ -36,6 +37,12 @@
 }
 -(BOOL)seamlessNegativeDelta {
     return [CATransaction seamlessNegativeDelta];
+}
+-(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior {
+    [CATransaction setSeamlessKeyBehavior:theBehavior];
+}
+-(SeamlessKeyBehavior)seamlessKeyBehavior {
+    return [CATransaction seamlessKeyBehavior];
 }
 
 @end

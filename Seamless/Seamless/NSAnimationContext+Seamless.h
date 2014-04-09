@@ -14,7 +14,7 @@
 #if TARGET_OS_IPHONE
 #else
 #import <Cocoa/Cocoa.h>
-#import "CATransaction+Seamless.h"
+#import "SeamlessDefinitions.h"
 
 @interface NSAnimationContext (Seamless)
 
@@ -24,6 +24,8 @@
 -(NSUInteger)seamlessSteps;
 -(void)setSeamlessNegativeDelta:(BOOL)theSeamless;
 -(BOOL)seamlessNegativeDelta;
+-(void)setSeamlessKeyBehavior:(SeamlessKeyBehavior)theBehavior;
+-(SeamlessKeyBehavior)seamlessKeyBehavior;
 
 @end
 
