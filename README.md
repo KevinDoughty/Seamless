@@ -170,17 +170,18 @@ A convenience typedef for difficult block syntax.
 ### Simple Seamless
 
 The most basic example for OSX animation.
-It is a from scratch re-implementation of "Follow Me" by Matt Long 10/22/08,
-which is an great example of presentation layer animation behavior.
+It is a from scratch re-implementation of ["Follow Me" by Matt Long](http://www.cimgf.com/2008/11/05/core-animation-tutorial-interrupting-animation-progress/),
+which is a simple but great example of presentation layer animation behavior. 
 Drag the mouse cursor around the window and the dot will follow.
 
 ### CocoaSlides
 
-This is an old Apple sample project from 10.5 Leopard, updated to use the Seamless.framework.
-Minor changes were made to make the window resizable, to flip view coordinates,
-and to the layout algorithm for allowing narrow widths.
-The significant code is in `AssetCollectionView` method `-(void)layoutSubviews`,
-which merely sets seamlessNegativeDelta to YES and assigns a timing block.
+This is an old Apple sample project from 10.5 Leopard, updated to use the Seamless.framework. 
+Minor changes were made to make the window resizable, to flip view coordinates, 
+and to the layout algorithm for allowing narrow widths. 
+The significant changes are in the `AssetCollectionView` method `-(void)layoutSubviews`, 
+which merely sets seamlessNegativeDelta to YES and assigns a timing block. 
+This is the best example of the usefulness of this animation pattern. 
 Try resizing the window or hitting command-1 through command-4.
 
 ### JellyBeans
@@ -193,7 +194,7 @@ It will probably be removed in the future.
 An example of relative animation on iOS, modified from original Apple sample code.
 The gesture recognizer IBActions in `APLViewController` were modified.
 SeamlessAnimations are created and views are explicitly animated,
-which is to date the only success I've had with this technique.
+which is to date the only success I've had with this technique on iOS.
 There is some discrepancy with scaling, particularly in the presence of rotation.
 But it is still noticeable even when all animation is disabled by setting `static BOOL const useSeamlessAnimation` to NO. 
 
@@ -207,3 +208,9 @@ Inslerpolate.c is adapted from WebKit source and released under a separate licen
 Documentation needs refining.
 
 Need better iOS examples.
+
+Entries in the arbitrary animation dictionary of the original animation are lost,
+when querying animations recalled by -animationKeys and -animationForKey:. 
+Need to forward valueForUndefinedKey: to the copy of the original animation.
+Animation delegate methods -animationDidStart and -animationDidStop:finished: do not have the same problem.
+
