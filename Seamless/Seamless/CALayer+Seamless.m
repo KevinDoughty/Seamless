@@ -18,6 +18,7 @@
 #import "SeamlessAnimation.h"
 #import "Inslerpolate.h"
 #import <objc/runtime.h>
+#import "SeamlessEasedAnimation.h"
 
 #define kSeamlessSteps 100
 
@@ -135,7 +136,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                     seamlessKey = theKey; // seamlessKeyDefault
                 }
                 
-                CAKeyframeAnimation *theKeyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:theKeyPath];
+                SeamlessEasedAnimation *theKeyframeAnimation = [SeamlessEasedAnimation animationWithKeyPath:theKeyPath];
                 [theKeyframeAnimation setValue:theAnimation forKey:@"seamlessOriginalAnimation"];
                 theKeyframeAnimation.duration = theAnimation.duration;
                 if (theAnimation.delegate) theKeyframeAnimation.delegate = [SeamlessDelegate singleton];
@@ -221,10 +222,10 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
 #endif
                     BOOL rectAnimationIsBroken = YES; // Rect animation was not broken in 10.5 Leopard
                     if (rectAnimationIsBroken) { // create a group animation with position and size sub animations. This cannot be handled in actionForKey because of other problems.
-                        CAKeyframeAnimation *theOriginAnimation = nil;
-                        CAKeyframeAnimation *theSizeAnimation = nil;
+                        SeamlessEasedAnimation *theOriginAnimation = nil;
+                        SeamlessEasedAnimation *theSizeAnimation = nil;
                         
-                        theOriginAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".origin"]];
+                        theOriginAnimation = [SeamlessEasedAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".origin"]];
                         theOriginAnimation.values = keyframeValues(^(double progress) {
                             CGFloat theX = seamlessFloat(oldRect.origin.x, newRect.origin.x, progress, isSeamless);
                             CGFloat theY = seamlessFloat(oldRect.origin.y, newRect.origin.y, progress, isSeamless);
@@ -237,7 +238,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                         theOriginAnimation.fillMode = kCAFillModeBackwards;
                         theOriginAnimation.additive = YES;
                         
-                        theSizeAnimation = [CAKeyframeAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".size"]];
+                        theSizeAnimation = [SeamlessEasedAnimation animationWithKeyPath:[theKeyPath stringByAppendingString:@".size"]];
                         theSizeAnimation.values = keyframeValues(^(double progress) {
                             CGFloat theW = seamlessFloat(oldRect.size.width, newRect.size.width, progress, isSeamless);
                             CGFloat theH = seamlessFloat(oldRect.size.height, newRect.size.height, progress, isSeamless);

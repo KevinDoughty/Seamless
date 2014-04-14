@@ -176,12 +176,12 @@ Drag the mouse cursor around the window and the dot will follow.
 
 ### CocoaSlides
 
-This is an old Apple sample project from 10.5 Leopard, updated to use the Seamless.framework. 
+This is the best example of the usefulness of this animation pattern, 
+an old Apple sample project from 10.5 Leopard, updated to use the Seamless.framework. 
 Minor changes were made to make the window resizable, to flip view coordinates, 
 and to the layout algorithm for allowing narrow widths. 
 The significant changes are in the `AssetCollectionView` method `-(void)layoutSubviews`, 
 which merely sets seamlessNegativeDelta to YES and assigns a timing block. 
-This is the best example of the usefulness of this animation pattern. 
 Try resizing the window or hitting command-1 through command-4.
 
 ### JellyBeans
@@ -208,9 +208,3 @@ Inslerpolate.c is adapted from WebKit source and released under a separate licen
 Documentation needs refining.
 
 Need better iOS examples.
-
-Entries in the arbitrary animation dictionary of the original animation are lost,
-when querying animations recalled by -animationKeys and -animationForKey:. 
-Need to forward valueForUndefinedKey: to the copy of the original animation.
-Animation delegate methods -animationDidStart and -animationDidStop:finished: do not have the same problem.
-

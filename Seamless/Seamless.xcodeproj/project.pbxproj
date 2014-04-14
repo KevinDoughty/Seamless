@@ -16,6 +16,10 @@
 		0A767EE7188BF2FF00631871 /* Inslerpolate.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A767EE5188BF2FF00631871 /* Inslerpolate.c */; };
 		0A767EEC188C027F00631871 /* Inslerpolate.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A767EEB188C027F00631871 /* Inslerpolate.h */; };
 		0A767EED188C027F00631871 /* Inslerpolate.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A767EEB188C027F00631871 /* Inslerpolate.h */; };
+		0A9B0F9818FC2DCD00E0AA78 /* SeamlessEasedAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A9B0F9618FC2DCD00E0AA78 /* SeamlessEasedAnimation.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0A9B0F9918FC2DCD00E0AA78 /* SeamlessEasedAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A9B0F9618FC2DCD00E0AA78 /* SeamlessEasedAnimation.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0A9B0F9A18FC2DCD00E0AA78 /* SeamlessEasedAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9B0F9718FC2DCD00E0AA78 /* SeamlessEasedAnimation.m */; };
+		0A9B0F9B18FC2DCD00E0AA78 /* SeamlessEasedAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9B0F9718FC2DCD00E0AA78 /* SeamlessEasedAnimation.m */; };
 		0AA3E251188F830C008B0D91 /* CABasicAnimation+Seamless.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AA3E24F188F830C008B0D91 /* CABasicAnimation+Seamless.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0AA3E252188F830C008B0D91 /* CABasicAnimation+Seamless.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AA3E24F188F830C008B0D91 /* CABasicAnimation+Seamless.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0AA3E253188F830C008B0D91 /* CABasicAnimation+Seamless.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA3E250188F830C008B0D91 /* CABasicAnimation+Seamless.m */; };
@@ -74,6 +78,8 @@
 		0A50F11316EA98A2000CED82 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0A767EE5188BF2FF00631871 /* Inslerpolate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Inslerpolate.c; sourceTree = "<group>"; };
 		0A767EEB188C027F00631871 /* Inslerpolate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inslerpolate.h; sourceTree = "<group>"; };
+		0A9B0F9618FC2DCD00E0AA78 /* SeamlessEasedAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeamlessEasedAnimation.h; sourceTree = "<group>"; };
+		0A9B0F9718FC2DCD00E0AA78 /* SeamlessEasedAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeamlessEasedAnimation.m; sourceTree = "<group>"; };
 		0AA3E24F188F830C008B0D91 /* CABasicAnimation+Seamless.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CABasicAnimation+Seamless.h"; sourceTree = "<group>"; };
 		0AA3E250188F830C008B0D91 /* CABasicAnimation+Seamless.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CABasicAnimation+Seamless.m"; sourceTree = "<group>"; };
 		0AB158F718F3DB8A006D1296 /* SeamlessDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeamlessDefinitions.h; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 				0AF5A3F7187D5C49002296E1 /* NSAnimationContext+Seamless.m */,
 				0AF5A3F8187D5C49002296E1 /* SeamlessAnimation.h */,
 				0AF5A3F9187D5C49002296E1 /* SeamlessAnimation.m */,
+				0A9B0F9618FC2DCD00E0AA78 /* SeamlessEasedAnimation.h */,
+				0A9B0F9718FC2DCD00E0AA78 /* SeamlessEasedAnimation.m */,
 				0AB5B70B18F5E0AF0006AF37 /* SeamlessDelegate.h */,
 				0AB5B70C18F5E0AF0006AF37 /* SeamlessDelegate.m */,
 				0A767EEB188C027F00631871 /* Inslerpolate.h */,
@@ -205,6 +213,7 @@
 				0A767EEC188C027F00631871 /* Inslerpolate.h in Headers */,
 				0AF5A3FE187D5C49002296E1 /* SeamlessAnimation.h in Headers */,
 				0AF5A485187D6C0C002296E1 /* Seamless.h in Headers */,
+				0A9B0F9818FC2DCD00E0AA78 /* SeamlessEasedAnimation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,6 +230,7 @@
 				0A767EED188C027F00631871 /* Inslerpolate.h in Headers */,
 				0AF5A4DA187D712A002296E1 /* CATransaction+Seamless.h in Headers */,
 				0AF5A4DB187D712D002296E1 /* NSAnimationContext+Seamless.h in Headers */,
+				0A9B0F9918FC2DCD00E0AA78 /* SeamlessEasedAnimation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +318,7 @@
 			files = (
 				0A767EE6188BF2FF00631871 /* Inslerpolate.c in Sources */,
 				0AF5A3FD187D5C49002296E1 /* NSAnimationContext+Seamless.m in Sources */,
+				0A9B0F9A18FC2DCD00E0AA78 /* SeamlessEasedAnimation.m in Sources */,
 				0AF5A3FB187D5C49002296E1 /* CATransaction+Seamless.m in Sources */,
 				0AF5A3FF187D5C49002296E1 /* SeamlessAnimation.m in Sources */,
 				0AB5B70E18F5E0AF0006AF37 /* SeamlessDelegate.m in Sources */,
@@ -322,6 +333,7 @@
 			files = (
 				0A767EE7188BF2FF00631871 /* Inslerpolate.c in Sources */,
 				0AF5A4E0187D7164002296E1 /* CATransaction+Seamless.m in Sources */,
+				0A9B0F9B18FC2DCD00E0AA78 /* SeamlessEasedAnimation.m in Sources */,
 				0AB5B71018F5E4B80006AF37 /* SeamlessDelegate.m in Sources */,
 				0AF5A4DE187D7159002296E1 /* CALayer+Seamless.m in Sources */,
 				0AF5A4E2187D716C002296E1 /* SeamlessAnimation.m in Sources */,
