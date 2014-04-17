@@ -15,4 +15,6 @@
 #import <Seamless/CATransaction+Seamless.h>
 #import <Seamless/CABasicAnimation+Seamless.h>
 #import <Seamless/NSAnimationContext+Seamless.h>
+#import <Seamless/SeamlessBezier.h>
+
 //#import <Seamless/SeamlessDefinitions.h>
