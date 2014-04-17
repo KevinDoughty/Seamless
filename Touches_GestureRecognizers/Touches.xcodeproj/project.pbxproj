@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0AAE7DE518F3A6A20062F3C9 /* libSeamless.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAE7DE418F3A6A20062F3C9 /* libSeamless.a */; };
+		0ACE310219000F9800617EE0 /* libSeamless.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE310119000F9800617EE0 /* libSeamless.a */; };
 		28B40A8E173A2B4B00321266 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B40A8D173A2B4B00321266 /* UIKit.framework */; };
 		28B40A90173A2B4B00321266 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B40A8F173A2B4B00321266 /* Foundation.framework */; };
 		28B40A92173A2B4B00321266 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28B40A91173A2B4B00321266 /* CoreGraphics.framework */; };
@@ -26,7 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0AAE7DE418F3A6A20062F3C9 /* libSeamless.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSeamless.a; path = "../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug/libSeamless.a"; sourceTree = "<group>"; };
+		0ACE310119000F9800617EE0 /* libSeamless.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSeamless.a; path = /Users/k/Library/Frameworks/libSeamless/libSeamless.a; sourceTree = "<absolute>"; };
 		280B3894173AA46F00BE772E /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = SOURCE_ROOT; };
 		28B40A8A173A2B4B00321266 /* Touches.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Touches.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28B40A8D173A2B4B00321266 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -57,7 +57,7 @@
 			files = (
 				28B40AB7173A2E2F00321266 /* QuartzCore.framework in Frameworks */,
 				28B40A92173A2B4B00321266 /* CoreGraphics.framework in Frameworks */,
-				0AAE7DE518F3A6A20062F3C9 /* libSeamless.a in Frameworks */,
+				0ACE310219000F9800617EE0 /* libSeamless.a in Frameworks */,
 				28B40A8E173A2B4B00321266 /* UIKit.framework in Frameworks */,
 				28B40A90173A2B4B00321266 /* Foundation.framework in Frameworks */,
 			);
@@ -69,7 +69,7 @@
 		28B40A81173A2B4B00321266 = {
 			isa = PBXGroup;
 			children = (
-				0AAE7DE418F3A6A20062F3C9 /* libSeamless.a */,
+				0ACE310119000F9800617EE0 /* libSeamless.a */,
 				28B40A93173A2B4B00321266 /* Touches */,
 				28B40A8C173A2B4B00321266 /* Frameworks */,
 				28B40A8B173A2B4B00321266 /* Products */,
@@ -294,15 +294,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug";
+				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Touches/Touches-Prefix.pch";
 				INFOPLIST_FILE = "Touches/Touches-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
-				);
+				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks/**";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -313,15 +310,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug";
+				FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks/**";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Touches/Touches-Prefix.pch";
 				INFOPLIST_FILE = "Touches/Touches-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
-				);
+				LIBRARY_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks/**";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

@@ -141,14 +141,6 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                 theKeyframeAnimation.duration = theAnimation.duration;
                 if (theAnimation.delegate) theKeyframeAnimation.delegate = [SeamlessDelegate singleton];
                 
-                [theAnimation setValue:theKeyframeAnimation forKey:@"seamlessReplacedAnimation"];
-                
-                NSSet *undefinedKeys = [theBasicAnimation valueForKey:@"seamlessUndefinedKeys"];
-                [theKeyframeAnimation setValue:undefinedKeys forKey:@"seamlessUndefinedKeys"];
-                for (NSString* theKey in undefinedKeys) {
-                    [theKeyframeAnimation setValue:[theBasicAnimation valueForKey:theKey] forKey:theKey];
-                }
-                
                 CAMediaTimingFunction *perfectTimingFunction = [CAMediaTimingFunction functionWithControlPoints:0.5 :0.0 :0.5 :1.0f];
                 if (!theTimingBlock) theKeyframeAnimation.timingFunction = perfectTimingFunction;
                 theKeyframeAnimation.fillMode = theBasicAnimation.fillMode;
@@ -175,7 +167,6 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                     }
                     return theValues;
                 };
-                
                 
                 if (strcmp(objCType,@encode(CATransform3D))==0) {
                     CATransform3D theOld = [theOldValue CATransform3DValue];
@@ -254,22 +245,16 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                         
                         CAAnimationGroup *theGroupAnimation = [CAAnimationGroup animation];
                         if (!theTimingBlock) theGroupAnimation.timingFunction = perfectTimingFunction;
-                        theGroupAnimation.fillMode = kCAFillModeBoth;
+                        theGroupAnimation.fillMode = kCAFillModeBackwards;
                         theGroupAnimation.animations = [NSArray arrayWithObjects:theOriginAnimation, theSizeAnimation, nil];
                         
                         [theGroupAnimation setValue:theAnimation forKey:@"seamlessOriginalAnimation"];
-                        
-                        [theGroupAnimation setValue:undefinedKeys forKey:@"seamlessUndefinedKeys"];
-                        for (NSString* theKey in undefinedKeys) {
-                            [theGroupAnimation setValue:[theBasicAnimation valueForKey:theKey] forKey:theKey];
-                        }
                         
                         if (theAnimation.delegate) theGroupAnimation.delegate = [SeamlessDelegate singleton];
                         theGroupAnimation.duration = theAnimation.duration;
                         theGroupAnimation.beginTime = theBasicAnimation.beginTime;
                         theGroupAnimation.timeOffset = theBasicAnimation.timeOffset;
                         
-                        [theAnimation setValue:theGroupAnimation forKey:@"seamlessReplacedAnimation"];
                         
                         return [self seamlessLayerSwizzleAddAnimation:theGroupAnimation forKey:seamlessKey];
                         

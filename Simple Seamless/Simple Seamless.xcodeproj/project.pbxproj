@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A037A06190001FC00791420 /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A037A05190001FC00791420 /* Seamless.framework */; };
 		0A50F1BF16EAE9E7000CED82 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A50F1BE16EAE9E7000CED82 /* Cocoa.framework */; };
 		0A50F1C916EAE9E7000CED82 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A50F1C716EAE9E7000CED82 /* InfoPlist.strings */; };
 		0A50F1CB16EAE9E7000CED82 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50F1CA16EAE9E7000CED82 /* main.m */; };
@@ -14,10 +15,10 @@
 		0A50F1D516EAE9E8000CED82 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A50F1D316EAE9E8000CED82 /* MainMenu.xib */; };
 		0A50F1DD16EAEA2E000CED82 /* SimpleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50F1DC16EAEA2E000CED82 /* SimpleView.m */; };
 		0A767EF3188C6F4400631871 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A767EF2188C6F4400631871 /* QuartzCore.framework */; };
-		0AA919DD1887889100DB87DB /* Seamless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA919DC1887889100DB87DB /* Seamless.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A037A05190001FC00791420 /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = ../../../../../../../Users/k/Library/Frameworks/Seamless.framework; sourceTree = "<group>"; };
 		0A50F1BB16EAE9E7000CED82 /* Simple Seamless.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Seamless.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A50F1BE16EAE9E7000CED82 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0A50F1C116EAE9E7000CED82 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -32,7 +33,6 @@
 		0A50F1DB16EAEA2E000CED82 /* SimpleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleView.h; sourceTree = "<group>"; };
 		0A50F1DC16EAEA2E000CED82 /* SimpleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleView.m; sourceTree = "<group>"; };
 		0A767EF2188C6F4400631871 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = ../../../../../../../System/Library/Frameworks/QuartzCore.framework; sourceTree = "<group>"; };
-		0AA919DC1887889100DB87DB /* Seamless.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Seamless.framework; path = "../../../../../../../Users/k/Library/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug/Seamless.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,8 +40,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AA919DD1887889100DB87DB /* Seamless.framework in Frameworks */,
 				0A50F1BF16EAE9E7000CED82 /* Cocoa.framework in Frameworks */,
+				0A037A06190001FC00791420 /* Seamless.framework in Frameworks */,
 				0A767EF3188C6F4400631871 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,8 +69,8 @@
 		0A50F1BD16EAE9E7000CED82 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A037A05190001FC00791420 /* Seamless.framework */,
 				0A767EF2188C6F4400631871 /* QuartzCore.framework */,
-				0AA919DC1887889100DB87DB /* Seamless.framework */,
 				0A50F1BE16EAE9E7000CED82 /* Cocoa.framework */,
 				0A50F1C016EAE9E7000CED82 /* Other Frameworks */,
 			);
@@ -273,6 +273,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Simple Seamless/Simple Seamless-Prefix.pch";
@@ -289,6 +290,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Seamless-fgeediychrtdzhbhdnhyegwulieu/Build/Products/Debug",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Simple Seamless/Simple Seamless-Prefix.pch";
