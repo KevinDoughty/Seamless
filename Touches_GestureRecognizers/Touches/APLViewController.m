@@ -156,7 +156,7 @@ static BOOL const useRelativeAnimation = YES;
     return [self pullBlock];
 }
 -(CGFloat)animationDuration {
-    return 20;
+    return 1;
 }
 
 #pragma mark - Touch handling
