@@ -55,8 +55,8 @@ void seamlessSwizzle(Class c, SEL orig, SEL new) {
 }
 
 -(CALayer*)seamlessPreviousLayer { // It would be bad to add this as a sublayer in a layer tree, and nothing prevents you from doing so. That's why this is private now.
-	CALayer *theLayer = [self valueForKey:@"seamlessSeamlessPreviousLayer"];
-	if (theLayer == nil) {
+	CALayer *theLayer = nil;;
+    if (![self valueForKey:@"isSeamlessPreviousLayer"] && (theLayer = [self valueForKey:@"seamlessSeamlessPreviousLayer"]) == nil) {
 		theLayer = [CALayer layer]; // You don't want initWithLayer, and you don't want any class other than CALayer.
 		[CATransaction begin];
 		[CATransaction setDisableActions:YES];
@@ -89,6 +89,10 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
     return (isSeamless) ? (1-progress) * (old-nu) : old+(progress*(nu-old));
 }
 
+-(CATransform3D)seamlessBlendTransform:(CATransform3D)fromTransform to:(CATransform3D)toTransform progress:(double)progress {
+    CATransform3D final = seamlessBlend(fromTransform,toTransform,progress);
+    return final;
+}
 
 -(void)seamlessLayerSwizzleAddAnimation:(CAAnimation*)theAnimation forKey:(NSString*)theKey { // I do this here because in animationForKey: and actionForKey: the fromValue is set to the presentationLayer value, but keyPath, toValue, and byValue are null. Key is known but conversions to keyPath are not, for example frameOrigin to layer.position.
     
@@ -151,6 +155,10 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                 }
                 theKeyframeAnimation.beginTime = theBasicAnimation.beginTime;
                 theKeyframeAnimation.timeOffset = theBasicAnimation.timeOffset;
+                
+                [theKeyframeAnimation setValue:theOldValue forKey:@"oldValue"];
+                [theKeyframeAnimation setValue:theNewValue forKey:@"nuValue"];
+                
                 
                 NSUInteger steps = [theBasicAnimation seamlessSteps];
                 if (!steps) steps = [CATransaction seamlessSteps];
@@ -255,6 +263,8 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
                         theGroupAnimation.beginTime = theBasicAnimation.beginTime;
                         theGroupAnimation.timeOffset = theBasicAnimation.timeOffset;
                         
+                        [theGroupAnimation setValue:theOldValue forKey:@"oldValue"];
+                        [theGroupAnimation setValue:theNewValue forKey:@"nuValue"];
                         
                         return [self seamlessLayerSwizzleAddAnimation:theGroupAnimation forKey:seamlessKey];
                         
@@ -320,13 +330,7 @@ const CGFloat seamlessFloat(CGFloat old, CGFloat nu, double progress, BOOL isSea
             }
         }
     }
-    [theAnimation setValue:@YES forKey:@"seamlessNotSeamless"];
     [self seamlessLayerSwizzleAddAnimation:theAnimation forKey:theKey];
-}
-
--(CATransform3D)seamlessBlendTransform:(CATransform3D)fromTransform to:(CATransform3D)toTransform progress:(double)progress {
-    CATransform3D final = seamlessBlend(fromTransform,toTransform,progress);
-    return final;
 }
 
 @end

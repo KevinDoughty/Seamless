@@ -156,7 +156,7 @@ static BOOL const useRelativeAnimation = YES;
     return [self pullBlock];
 }
 -(CGFloat)animationDuration {
-    return 1;
+    return 20;
 }
 
 #pragma mark - Touch handling
@@ -172,24 +172,23 @@ static BOOL const useRelativeAnimation = YES;
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         UIView *piece = [gestureRecognizer view];
         CGPoint translation = [gestureRecognizer translationInView:[piece superview]];
+        CGPoint old = piece.layer.position;
         CGPoint nu = CGPointMake([piece center].x + translation.x, [piece center].y + translation.y);
         if (useRelativeAnimation) {
-            CGPoint old = piece.layer.position;
-            
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+        }
+        //[piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
+        [piece setCenter:nu];
+        if (useRelativeAnimation) {
             SeamlessAnimation *theAnimation = [SeamlessAnimation animationWithKeyPath:@"position"];
             theAnimation.seamlessTimingBlock = [self timingBlock];
             theAnimation.oldValue = [NSValue valueWithCGPoint:old];
             theAnimation.nuValue = [NSValue valueWithCGPoint:nu];
             theAnimation.duration = [self animationDuration];
-            
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
             [piece.layer addAnimation:theAnimation forKey:nil];
+            [CATransaction commit];
         }
-        //[piece setCenter:CGPointMake([piece center].x + translation.x, [piece center].y + translation.y)];
-        [piece setCenter:nu];
-        if (useRelativeAnimation) [CATransaction commit];
-        
         [gestureRecognizer setTranslation:CGPointZero inView:[piece superview]];
     }
 }
@@ -205,23 +204,23 @@ static BOOL const useRelativeAnimation = YES;
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         UIView *piece = [gestureRecognizer view];
+        CATransform3D old = piece.layer.transform;
+        CATransform3D nu = CATransform3DRotate(old, [gestureRecognizer rotation], 0, 0, 1);
         if (useRelativeAnimation) {
-            CATransform3D old = piece.layer.transform;
-            CATransform3D nu = CATransform3DRotate(old, [gestureRecognizer rotation], 0, 0, 1);
-            
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+        }
+        //[gestureRecognizer view].transform = CGAffineTransformRotate([[gestureRecognizer view] transform], [gestureRecognizer rotation]);
+        piece.transform = CGAffineTransformRotate([piece transform], [gestureRecognizer rotation]);
+        if (useRelativeAnimation) {
             SeamlessAnimation *theAnimation = [SeamlessAnimation animationWithKeyPath:@"transform"];
             theAnimation.seamlessTimingBlock = [self timingBlock];
             theAnimation.oldValue = [NSValue valueWithCATransform3D:old];
             theAnimation.nuValue = [NSValue valueWithCATransform3D:nu];
             theAnimation.duration = [self animationDuration];
-            
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
             [piece.layer addAnimation:theAnimation forKey:nil];
+            [CATransaction commit];
         }
-        //[gestureRecognizer view].transform = CGAffineTransformRotate([[gestureRecognizer view] transform], [gestureRecognizer rotation]);
-        piece.transform = CGAffineTransformRotate([piece transform], [gestureRecognizer rotation]);
-        if (useRelativeAnimation) [CATransaction commit];
         
         [gestureRecognizer setRotation:0];
     }
@@ -238,24 +237,23 @@ static BOOL const useRelativeAnimation = YES;
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
         UIView *piece = [gestureRecognizer view];
+        CATransform3D old = piece.layer.transform;
+        CATransform3D nu = CATransform3DScale(old, [gestureRecognizer scale], [gestureRecognizer scale], 1);
         if (useRelativeAnimation) {
-            CATransform3D old = piece.layer.transform;
-            CATransform3D nu = CATransform3DScale(old, [gestureRecognizer scale], [gestureRecognizer scale], 1);
-            
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+        }
+        //[gestureRecognizer view].transform = CGAffineTransformScale([[gestureRecognizer view] transform], [gestureRecognizer scale], [gestureRecognizer scale]);
+        piece.transform = CGAffineTransformScale(piece.transform, [gestureRecognizer scale], [gestureRecognizer scale]);
+        if (useRelativeAnimation) {
             SeamlessAnimation *theAnimation = [SeamlessAnimation animationWithKeyPath:@"transform"];
             theAnimation.seamlessTimingBlock = [self timingBlock];
             theAnimation.oldValue = [NSValue valueWithCATransform3D:old];
             theAnimation.nuValue = [NSValue valueWithCATransform3D:nu];
             theAnimation.duration = [self animationDuration];
-            
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
             [piece.layer addAnimation:theAnimation forKey:nil];
+            [CATransaction commit];
         }
-        //[gestureRecognizer view].transform = CGAffineTransformScale([[gestureRecognizer view] transform], [gestureRecognizer scale], [gestureRecognizer scale]);
-        piece.transform = CGAffineTransformScale(piece.transform, [gestureRecognizer scale], [gestureRecognizer scale]);
-        if (useRelativeAnimation) [CATransaction commit];
-        
         [gestureRecognizer setScale:1];
     }
 }
