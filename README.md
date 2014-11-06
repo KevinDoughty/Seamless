@@ -1,6 +1,6 @@
 ## Seamless
 
-`Seamless.framework` for OSX and `libSeamless.a` for iOS enhance Core Animation with additive negative delta animation.
+`Seamless.framework` for OSX and `libSeamless.a` for iOS enhance Core Animation with relative additive animation.
 It adds simple animation smoothing or custom timing determined by blocks, 
 to instances of `CABasicAnimation` with an extension to `CATransaction`,
 or on instances of a `CABasicAnimation` subclass called `SeamlessAnimation`.
